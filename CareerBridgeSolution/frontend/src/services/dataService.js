@@ -22,3 +22,18 @@ export const registerUser = async (payload) => {
     });
   }
 };
+
+// PLACEHOLDER: Mock login fallback
+export const loginUser = async (payload) => {
+  try {
+    return await apiClient.post('/Auth/login', payload);
+  } catch (error) {
+    console.warn("Backend /Auth/login is unreachable. Returning stub JWT token.", error);
+    return Promise.resolve({
+      data: {
+        token: "eyMockJwtToken123456789.Alpha.Stub",
+        message: "Login successful (Mocked)"
+      }
+    });
+  }
+};
