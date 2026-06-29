@@ -45,6 +45,14 @@ namespace CareerBridge.API
                     };
                 });
 
+            builder.Services.AddCors(options => {
+                options.AddPolicy("AllowReactApp", policy => {
+                    policy.WithOrigins("http://localhost:5173") // React Dev Server Port
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             // Seed database
@@ -71,6 +79,8 @@ namespace CareerBridge.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowReactApp");
 
             app.UseAuthentication();
             app.UseAuthorization();
