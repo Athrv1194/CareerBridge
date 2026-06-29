@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CareerBridge.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bfa63260e3284e08b8bf7290ca7340f0779f72cb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7565ed1d9e50669101cda0a468a61ec993654a5")]
 [assembly: System.Reflection.AssemblyProductAttribute("CareerBridge.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CareerBridge.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
