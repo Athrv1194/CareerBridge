@@ -1,6 +1,20 @@
 import apiClient from './api';
 
-export const getCareerPaths = () => apiClient.get('/paths');
+// PLACEHOLDER: Mock fallback for getting career paths
+export const getCareerPaths = async () => {
+  try {
+    return await apiClient.get('/paths');
+  } catch (error) {
+    console.warn("Backend /paths is unreachable. Returning stub career paths.", error);
+    return Promise.resolve({
+      data: [
+        { id: 1, name: '.NET Developer' },
+        { id: 2, name: 'Java Developer' },
+        { id: 3, name: 'Frontend Engineer' }
+      ]
+    });
+  }
+};
 
 export const getRoadmap = (pathId) => apiClient.get(`/paths/${pathId}/roadmap`);
 
