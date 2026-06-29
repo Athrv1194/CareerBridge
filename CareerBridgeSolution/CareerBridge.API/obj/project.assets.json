@@ -4462,23 +4462,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jayes\\.nuget\\packages\\": {},
-    "D:\\DOTNET_APP\\SDK TOOLS\\NuGetPackages": {}
+    "C:\\Users\\Atharva\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jayes\\OneDrive\\Documents\\GitHub\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj",
+      "projectUniqueName": "D:\\Software\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj",
       "projectName": "CareerBridge.API",
-      "projectPath": "C:\\Users\\jayes\\OneDrive\\Documents\\GitHub\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj",
-      "packagesPath": "C:\\Users\\jayes\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jayes\\OneDrive\\Documents\\GitHub\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\obj\\",
+      "projectPath": "D:\\Software\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj",
+      "packagesPath": "C:\\Users\\Atharva\\.nuget\\packages\\",
+      "outputPath": "D:\\Software\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\DOTNET_APP\\SDK TOOLS\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\jayes\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Atharva\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
