@@ -1,2 +1,4 @@
 .vs/
 incident_log.md
+bin/
+obj/
