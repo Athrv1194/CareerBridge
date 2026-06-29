@@ -16,7 +16,37 @@ export const getCareerPaths = async () => {
   }
 };
 
-export const getRoadmap = (pathId) => apiClient.get(`/paths/${pathId}/roadmap`);
+// PLACEHOLDER: Mock fallback for getting roadmap steps
+export const getRoadmap = async (pathId) => {
+  try {
+    return await apiClient.get(`/paths/${pathId}/roadmap`);
+  } catch (error) {
+    console.warn(`Backend /paths/${pathId}/roadmap is unreachable. Returning stub roadmap.`, error);
+    
+    let mockSteps = [];
+    if (pathId === "1") {
+      mockSteps = [
+        { id: 101, title: 'C# Basics', status: 'Completed' },
+        { id: 102, title: 'Entity Framework Core', status: 'Not Started' },
+        { id: 103, title: 'SQL Server', status: 'Not Started' },
+      ];
+    } else if (pathId === "2") {
+      mockSteps = [
+        { id: 201, title: 'Java SE 17', status: 'Completed' },
+        { id: 202, title: 'Spring Boot', status: 'Not Started' },
+        { id: 203, title: 'Hibernate', status: 'Not Started' },
+      ];
+    } else {
+      mockSteps = [
+        { id: 301, title: 'HTML/CSS/JS', status: 'Completed' },
+        { id: 302, title: 'React 18', status: 'Completed' },
+        { id: 303, title: 'Redux Toolkit', status: 'Not Started' },
+      ];
+    }
+    
+    return Promise.resolve({ data: mockSteps });
+  }
+};
 
 export const updateStepStatus = (payload) => apiClient.post('/progress/update', payload);
 

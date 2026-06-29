@@ -1,34 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Form, Card } from 'react-bootstrap';
-import { getCareerPaths } from '../services/dataService';
+import { Container, Row, Col, Form, Card, ListGroup, Badge, Button } from 'react-bootstrap';
+import { getCareerPaths, getRoadmap } from '../services/dataService';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [paths, setPaths] = useState([]);
   const [selectedPathId, setSelectedPathId] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loadingPaths, setLoadingPaths] = useState(true);
+  const [pathsError, setPathsError] = useState(null);
 
+  const [roadmap, setRoadmap] = useState([]);
+  const [loadingRoadmap, setLoadingRoadmap] = useState(false);
+  const [roadmapError, setRoadmapError] = useState(null);
+
+  // Initial load for Career Paths
   useEffect(() => {
     const fetchPaths = async () => {
       try {
         const response = await getCareerPaths();
         setPaths(response.data || []);
       } catch (err) {
-        setError('Failed to load career paths.');
+        setPathsError('Failed to load career paths.');
         console.error(err);
       } finally {
-        setLoading(false);
+        setLoadingPaths(false);
       }
     };
     
     fetchPaths();
   }, []);
 
+  // Secondary load for Roadmap when path changes
+  useEffect(() => {
+    if (!selectedPathId) {
+      setRoadmap([]);
+      return;
+    }
+
+    const fetchRoadmap = async () => {
+      setLoadingRoadmap(true);
+      setRoadmapError(null);
+      try {
+        const response = await getRoadmap(selectedPathId);
+        setRoadmap(response.data || []);
+      } catch (err) {
+        setRoadmapError('Failed to load the roadmap checklist.');
+        console.error(err);
+      } finally {
+        setLoadingRoadmap(false);
+      }
+    };
+
+    fetchRoadmap();
+  }, [selectedPathId]);
+
   const handlePathChange = (e) => {
     const value = e.target.value;
     setSelectedPathId(value);
-    // Standard testing requirement: verify that selecting a discipline prints the track identifier value
     console.log(`Selected Career Track ID: ${value}`);
   };
 
@@ -48,10 +76,10 @@ const Dashboard = () => {
           <Col md={8} lg={6}>
             <Card className="shadow-lg path-selector-card border-0">
               <Card.Body className="p-4 p-md-5">
-                {error && <div className="alert alert-danger">{error}</div>}
+                {pathsError && <div className="alert alert-danger">{pathsError}</div>}
                 <Form.Group controlId="careerPathSelect">
                   <Form.Label className="fw-semibold mb-3">Career Discipline</Form.Label>
-                  {loading ? (
+                  {loadingPaths ? (
                     <div className="text-center py-2"><span className="spinner-border spinner-border-sm text-primary"></span> Loading tracks...</div>
                   ) : (
                     <Form.Select 
@@ -74,13 +102,58 @@ const Dashboard = () => {
           </Col>
         </Row>
         
-        {/* Placeholder for the active workspace tracking area */}
+        {/* Active Workspace Tracking Area */}
         {selectedPathId && (
-          <Row className="mt-5 fade-in">
-            <Col>
-              <Card className="border-0 shadow-sm glass-panel text-center p-5">
-                <h4 className="text-muted">Tracking workspace active for ID: {selectedPathId}</h4>
-                <p>Roadmap metrics and milestone components will be injected here.</p>
+          <Row className="mt-5 fade-in justify-content-center">
+            <Col md={10} lg={8}>
+              <Card className="border-0 shadow-lg glass-panel roadmap-panel">
+                <Card.Body className="p-4 p-md-5">
+                  <h3 className="mb-4 text-center fw-bold text-dark">Roadmap Modules</h3>
+                  
+                  {roadmapError && <div className="alert alert-danger">{roadmapError}</div>}
+                  
+                  {loadingRoadmap ? (
+                    <div className="text-center py-5">
+                      <span className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }}></span>
+                      <p className="mt-3 text-muted fw-semibold">Loading your curriculum timeline...</p>
+                    </div>
+                  ) : roadmap.length === 0 ? (
+                    <div className="text-center py-4 text-muted">No modules found for this track.</div>
+                  ) : (
+                    <ListGroup variant="flush" className="roadmap-list">
+                      {roadmap.map((step, index) => (
+                        <ListGroup.Item 
+                          key={step.id} 
+                          className="d-flex justify-content-between align-items-center roadmap-item p-3 mb-3 shadow-sm rounded"
+                        >
+                          <div className="d-flex align-items-center gap-3">
+                            <span className="step-number text-white rounded-circle d-flex justify-content-center align-items-center fw-bold shadow-sm" style={{ width: '40px', height: '40px' }}>
+                              {index + 1}
+                            </span>
+                            <div className="fw-semibold text-dark fs-5">{step.title}</div>
+                          </div>
+                          
+                          <div className="d-flex align-items-center gap-3">
+                            <Badge 
+                              bg={step.status === 'Completed' ? 'success' : 'secondary'} 
+                              pill 
+                              className="px-3 py-2 fs-6 shadow-sm"
+                            >
+                              {step.status}
+                            </Badge>
+                            
+                            {/* Toggle Button for aesthetics/completion */}
+                            {step.status !== 'Completed' && (
+                              <Button variant="outline-success" size="sm" className="rounded-pill px-3 fw-bold">
+                                Mark Done
+                              </Button>
+                            )}
+                          </div>
+                        </ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  )}
+                </Card.Body>
               </Card>
             </Col>
           </Row>
