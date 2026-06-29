@@ -12,13 +12,13 @@ namespace CareerBridge.API.Models
         public int CareerPathId { get; set; }
 
         [ForeignKey(nameof(CareerPathId))]
-        public CareerPath CareerPath { get; set; }
+        public required CareerPath CareerPath { get; set; }
 
         [Required]
         public int SkillId { get; set; }
 
         [ForeignKey(nameof(SkillId))]
-        public Skill Skill { get; set; }
+        public required Skill Skill { get; set; }
 
         public int Order { get; set; }
     }

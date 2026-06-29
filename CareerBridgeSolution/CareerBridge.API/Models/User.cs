@@ -9,12 +9,12 @@ namespace CareerBridge.API.Models
 
         [Required]
         [MaxLength(100)]
-        public string Username { get; set; }
+        public required string Username { get; set; }
 
         [Required]
         [EmailAddress]
         [MaxLength(150)]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         public ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
     }

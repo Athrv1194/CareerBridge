@@ -12,13 +12,13 @@ namespace CareerBridge.API.Models
         public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public required User User { get; set; }
 
         [Required]
         public int RoadmapStepId { get; set; }
 
         [ForeignKey(nameof(RoadmapStepId))]
-        public RoadmapStep RoadmapStep { get; set; }
+        public required RoadmapStep RoadmapStep { get; set; }
 
         public bool IsCompleted { get; set; }
         

@@ -9,9 +9,9 @@ namespace CareerBridge.API.Models
 
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public ICollection<RoadmapStep> RoadmapSteps { get; set; } = new List<RoadmapStep>();
     }
