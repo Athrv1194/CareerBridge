@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DotNet_Projects\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj": {}
+    "C:\\Users\\jayes\\OneDrive\\Documents\\GitHub\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj": {}
   },
   "projects": {
-    "D:\\DotNet_Projects\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj": {
+    "C:\\Users\\jayes\\OneDrive\\Documents\\GitHub\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DotNet_Projects\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj",
+        "projectUniqueName": "C:\\Users\\jayes\\OneDrive\\Documents\\GitHub\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj",
         "projectName": "CareerBridge.API",
-        "projectPath": "D:\\DotNet_Projects\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj",
-        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "D:\\DotNet_Projects\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\obj\\",
+        "projectPath": "C:\\Users\\jayes\\OneDrive\\Documents\\GitHub\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\CareerBridge.API.csproj",
+        "packagesPath": "C:\\Users\\jayes\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayes\\OneDrive\\Documents\\GitHub\\CareerBridge\\CareerBridgeSolution\\CareerBridge.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\DOTNET_APP\\SDK TOOLS\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jayes\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
