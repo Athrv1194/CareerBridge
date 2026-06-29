@@ -142,3 +142,4 @@ D:\DotNet_Projects\CareerBridge\CareerBridgeSolution\CareerBridge.API\obj\Debug\
 D:\DotNet_Projects\CareerBridge\CareerBridgeSolution\CareerBridge.API\obj\Debug\net8.0\CareerBridge.API.pdb
 D:\DotNet_Projects\CareerBridge\CareerBridgeSolution\CareerBridge.API\obj\Debug\net8.0\CareerBridge.API.genruntimeconfig.cache
 D:\DotNet_Projects\CareerBridge\CareerBridgeSolution\CareerBridge.API\obj\Debug\net8.0\ref\CareerBridge.API.dll
+D:\DotNet_Projects\CareerBridge\CareerBridgeSolution\CareerBridge.API\bin\Debug\net8.0\BCrypt.Net-Next.dll
