@@ -35,7 +35,7 @@ namespace CareerBridge.API.Controllers
                 return Unauthorized(new { message = "Invalid token: user identifier is missing." });
             }
 
-            var result = await _roadmapService.UpdateStepStatusAsync(userId, request.StepId, request.Status == "Completed");
+            var result = await _roadmapService.UpdateStepStatusAsync(userId, request);
             if (!result)
             {
                 return BadRequest(new { message = "Unable to update progress. Please check that the roadmap step exists." });

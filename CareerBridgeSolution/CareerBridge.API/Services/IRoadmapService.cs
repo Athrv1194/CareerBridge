@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using CareerBridge.API.DTOs;
 
 namespace CareerBridge.API.Services
 {
@@ -6,7 +7,7 @@ namespace CareerBridge.API.Services
     // TODO: Verify if any additional methods are needed for progress tracking.
     public interface IRoadmapService
     {
-        Task<bool> UpdateStepStatusAsync(int userId, int roadmapStepId, bool isCompleted);
+        Task<bool> UpdateStepStatusAsync(int userId, ProgressUpdateRequest request);
         Task InitializeUserRoadmapAsync(int userId, int careerPathId, int[]? preExistingSkillIds = null);
     }
 }

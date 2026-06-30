@@ -1,4 +1,5 @@
 using CareerBridge.API.Data;
+using CareerBridge.API.DTOs;
 using CareerBridge.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,50 +19,24 @@ namespace CareerBridge.API.Services
             _context = context;
         }
 
-        public async Task<bool> UpdateStepStatusAsync(int userId, int roadmapStepId, bool isCompleted)
+        public async Task<bool> UpdateStepStatusAsync(int userId, ProgressUpdateRequest request)
         {
-            // Verify if user exists
-            var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
-            if (!userExists)
-            {
-                return false;
-            }
-
-            // Verify if roadmap step exists
-            var stepExists = await _context.RoadmapSteps.AnyAsync(r => r.Id == roadmapStepId);
-            if (!stepExists)
-            {
-                return false;
-            }
-
-            // Find or create progress record
             var progress = await _context.UserProgresses
-                .FirstOrDefaultAsync(up => up.UserId == userId && up.RoadmapStepId == roadmapStepId);
+                .FirstOrDefaultAsync(up => up.UserId == userId && up.RoadmapStepId == request.StepId);
 
             if (progress == null)
             {
-                if (isCompleted)
-                {
-                    var newProgress = new UserProgress
-                    {
-                        UserId = userId,
-                        User = null!, // Handled by EF Core via foreign key
-                        RoadmapStepId = roadmapStepId,
-                        RoadmapStep = null!, // Handled by EF Core via foreign key
-                        IsCompleted = true,
-                        CompletionDate = DateTime.UtcNow
-                    };
-                    await _context.UserProgresses.AddAsync(newProgress);
-                }
-            }
-            else
-            {
-                progress.IsCompleted = isCompleted;
-                progress.CompletionDate = isCompleted ? DateTime.UtcNow : null;
-                _context.UserProgresses.Update(progress);
+                return false;
             }
 
+            bool isCompleted = request.Status == "Completed";
+            
+            progress.IsCompleted = isCompleted;
+            progress.CompletionDate = isCompleted ? DateTime.UtcNow : null;
+
+            _context.UserProgresses.Update(progress);
             await _context.SaveChangesAsync();
+
             return true;
         }
 
