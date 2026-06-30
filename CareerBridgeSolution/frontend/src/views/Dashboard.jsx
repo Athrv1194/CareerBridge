@@ -105,7 +105,7 @@ const Dashboard = () => {
                       <option value="">-- Choose a Track --</option>
                       {paths.map(path => (
                         <option key={path.id} value={path.id}>
-                          {path.name}
+                          {path.title}
                         </option>
                       ))}
                     </Form.Select>

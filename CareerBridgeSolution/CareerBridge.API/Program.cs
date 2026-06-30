@@ -24,6 +24,17 @@ namespace CareerBridge.API
             // Register RoadmapService for dependency injection
             builder.Services.AddScoped<IRoadmapService, RoadmapService>();
 
+            // Configure CORS to allow the React frontend to communicate with the API
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173") // Vite React default port
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -71,6 +82,8 @@ namespace CareerBridge.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowFrontend");
 
             app.UseAuthentication();
             app.UseAuthorization();

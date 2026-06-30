@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Automatically routes to your running .NET 8 Web API
 const apiClient = axios.create({
-  baseURL: 'https://localhost:7123/api', // ← Replace with your actual backend HTTPS port
+  baseURL: 'https://localhost:7198/api', // ← Replace with your actual backend HTTPS port
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,7 +10,7 @@ const apiClient = axios.create({
 
 // Code-Reduction Masterstroke: Automatically injects JWT token if it exists in local memory
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('jwtToken');
+  const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`; // Matches backend [Authorize] guard rules
   }
