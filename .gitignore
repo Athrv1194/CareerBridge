@@ -1,5 +1,27 @@
+# Visual Studio
 .vs/
+*.user
+
+# .NET Build artifacts
+**/bin/
+**/obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.sourcelink.json
+*AssemblyInfo.cs
+*.generated.*
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+
+# Logs
+*.log
 incident_log.md
+
 
 # Build results
 [Bb]in/
@@ -18,3 +40,7 @@ incident_log.md
 *.cache
 *.deps.json
 *.runtimeconfig.json
+
+# Security
+.env
+

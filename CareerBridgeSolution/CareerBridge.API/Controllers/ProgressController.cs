@@ -38,7 +38,7 @@ namespace CareerBridge.API.Controllers
             var result = await _roadmapService.UpdateStepStatusAsync(userId, request.StepId, request.Status == "Completed");
             if (!result)
             {
-                return NotFound(new { message = "Unable to update progress. Ensure the user and roadmap step exist." });
+                return BadRequest(new { message = "Unable to update progress. Please check that the roadmap step exists." });
             }
 
             return Ok(new { message = "Progress status updated successfully." });

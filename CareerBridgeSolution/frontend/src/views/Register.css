@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+.register-container {
+  font-family: 'Inter', sans-serif;
+}
+
+.fluid-bg {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 20px !important;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.register-title {
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: -0.5px;
+}
+
+.modern-input {
+  border-radius: 10px !important;
+  border: 2px solid transparent !important;
+  background-color: rgba(255,255,255,0.7) !important;
+  transition: all 0.3s ease !important;
+}
+
+.modern-input:focus {
+  background-color: #fff !important;
+  border-color: #23a6d5 !important;
+  box-shadow: 0 0 0 4px rgba(35, 166, 213, 0.15) !important;
+}
+
+.form-floating label {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.register-btn {
+  background: linear-gradient(135deg, #23a6d5 0%, #23d5ab 100%) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 14px !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease !important;
+}
+
+.register-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(35, 166, 213, 0.3) !important;
+  background: linear-gradient(135deg, #1d8eb8 0%, #1eb994 100%) !important;
+}
+
+.login-link {
+  color: #e73c7e;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.login-link:hover {
+  color: #c32d66;
+  text-decoration: underline;
+}
+
+.modern-alert {
+  border-radius: 10px;
+  border: none;
+}

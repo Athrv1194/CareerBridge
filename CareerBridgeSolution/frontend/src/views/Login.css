@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap');
+
+.login-container {
+  font-family: 'Outfit', sans-serif;
+  background: radial-gradient(circle at top right, #1a2a6c, #11212b, #4b134f);
+  background-size: cover;
+  animation: bgShift 20s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 24px !important;
+  color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4) !important;
+}
+
+.login-title {
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+  font-size: 2.2rem;
+}
+
+.login-card .text-muted {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+.login-card .modern-input {
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  background-color: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
+  transition: all 0.3s ease !important;
+}
+
+.login-card .modern-input::placeholder {
+  color: rgba(255,255,255,0.4) !important;
+}
+
+.login-card .modern-input:focus {
+  background-color: rgba(255,255,255,0.15) !important;
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 0 4px rgba(0, 242, 254, 0.2) !important;
+}
+
+.login-card .form-floating label {
+  color: rgba(255,255,255,0.5);
+  font-weight: 500;
+}
+
+.login-card .form-floating>.form-control:focus~label,
+.login-card .form-floating>.form-control:not(:placeholder-shown)~label {
+  color: #00f2fe;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 14px !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #000 !important;
+  transition: all 0.3s ease !important;
+}
+
+.login-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4) !important;
+}
+
+.register-link {
+  color: #00f2fe;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.register-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.modern-alert {
+  border-radius: 12px;
+  border: none;
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #ff8a96;
+  border-left: 4px solid #dc3545;
+}

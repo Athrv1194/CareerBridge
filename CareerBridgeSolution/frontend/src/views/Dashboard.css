@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+.dashboard-container {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(253,16%,7%,0.03) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(225,39%,30%,0.04) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(339,49%,30%,0.03) 0, transparent 50%);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dashboard-header h1 {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -1px;
+}
+
+.path-selector-card {
+  border-radius: 20px !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.path-selector-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+}
+
+.modern-select {
+  border-radius: 12px !important;
+  border: 2px solid #e2e8f0 !important;
+  background-color: #f1f5f9 !important;
+  font-weight: 500;
+  color: #334155 !important;
+  transition: all 0.25s ease !important;
+  cursor: pointer;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+.modern-select:focus {
+  border-color: #475569 !important;
+  box-shadow: 0 0 0 4px rgba(71, 85, 105, 0.15) !important;
+  background-color: #fff !important;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Roadmap Styling */
+.roadmap-panel {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-radius: 24px !important;
+}
+
+.roadmap-list .roadmap-item {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.roadmap-list .roadmap-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05) !important;
+  border-color: #23a6d5;
+}
+
+.step-number {
+  background: linear-gradient(135deg, #1d8eb8 0%, #1eb994 100%) !important;
+}
