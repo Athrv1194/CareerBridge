@@ -1,4 +1,20 @@
 .vs/
 incident_log.md
-bin/
-obj/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+*.cache
+*.deps.json
+*.runtimeconfig.json

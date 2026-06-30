@@ -2,6 +2,7 @@ using CareerBridge.API.Data;
 using CareerBridge.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CareerBridge.API.Services
@@ -62,6 +63,35 @@ namespace CareerBridge.API.Services
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task InitializeUserRoadmapAsync(int userId, int careerPathId)
+        {
+            var roadmapSteps = await _context.RoadmapSteps
+                .Where(r => r.CareerPathId == careerPathId)
+                .ToListAsync();
+
+            foreach (var step in roadmapSteps)
+            {
+                var existingProgress = await _context.UserProgresses
+                    .FirstOrDefaultAsync(up => up.UserId == userId && up.RoadmapStepId == step.Id);
+
+                if (existingProgress == null)
+                {
+                    var newProgress = new UserProgress
+                    {
+                        UserId = userId,
+                        User = null!, // Handled by EF Core via foreign key
+                        RoadmapStepId = step.Id,
+                        RoadmapStep = null!, // Handled by EF Core via foreign key
+                        IsCompleted = false,
+                        CompletionDate = null
+                    };
+                    await _context.UserProgresses.AddAsync(newProgress);
+                }
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }
