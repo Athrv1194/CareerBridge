@@ -1,52 +1,91 @@
+# ============================================================
+# CareerBridge — .gitignore
+# ASP.NET Core (.NET 8) + React (Vite) + macOS
+# ============================================================
+
+# ============================================================
+# macOS System Files
+# ============================================================
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+Icon?
+.Spotlight-V100
+.Trashes
+.TemporaryItems
+.fseventsd
+._*
+
+# ============================================================
 # Visual Studio
+# ============================================================
 .vs/
 *.user
+*.suo
+*.userosscache
+*.sln.docstates
 
-# .NET Build artifacts
+# ============================================================
+# Visual Studio Code
+# ============================================================
+.vscode/
+
+# ============================================================
+# JetBrains Rider
+# ============================================================
+.idea/
+
+# ============================================================
+# .NET Build Artifacts
+# ============================================================
+[Bb]in/
+[Oo]bj/
 **/bin/
 **/obj/
 *.dll
 *.exe
 *.pdb
 *.cache
-*.sourcelink.json
-*AssemblyInfo.cs
-*.generated.*
-
-# Node / Frontend
-node_modules/
-dist/
-build/
-
-# Logs
-*.log
-incident_log.md
-
-
-# Build results
-[Bb]in/
-[Oo]bj/
-
-# Visual Studio specific files
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Build artifacts
-*.dll
-*.exe
-*.pdb
-*.cache
 *.deps.json
 *.runtimeconfig.json
-
-# Security
-.env
-
-# System files
-.DS_Store
-
-# Extra exact matches
-apphost.exe
+*.sourcelink.json
 *.sourceLink.json
+*AssemblyInfo.cs
+*.generated.*
+apphost
+apphost.exe
+
+# ============================================================
+# Node / React / Vite Frontend
+# ============================================================
+node_modules/
+dist/
+dist-ssr/
+build/
+coverage/
+.vite/
+*.local
+
+# ============================================================
+# Logs & Temporary Files
+# ============================================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tmp
+*.temp
+
+# ============================================================
+# Security — Never Commit Secrets
+# ============================================================
+.env
+.env.*
+!.env.example
+
+# ============================================================
+# Project-Specific
+# ============================================================
+incident_log.md
