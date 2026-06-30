@@ -65,7 +65,7 @@ namespace CareerBridge.API.Services
             return true;
         }
 
-        public async Task InitializeUserRoadmapAsync(int userId, int careerPathId)
+        public async Task InitializeUserRoadmapAsync(int userId, int careerPathId, int[]? preExistingSkillIds = null)
         {
             var roadmapSteps = await _context.RoadmapSteps
                 .Where(r => r.CareerPathId == careerPathId)
@@ -78,14 +78,16 @@ namespace CareerBridge.API.Services
 
                 if (existingProgress == null)
                 {
+                    bool alreadyKnows = preExistingSkillIds != null && preExistingSkillIds.Contains(step.SkillId);
+
                     var newProgress = new UserProgress
                     {
                         UserId = userId,
                         User = null!, // Handled by EF Core via foreign key
                         RoadmapStepId = step.Id,
                         RoadmapStep = null!, // Handled by EF Core via foreign key
-                        IsCompleted = false,
-                        CompletionDate = null
+                        IsCompleted = alreadyKnows,
+                        CompletionDate = alreadyKnows ? DateTime.UtcNow : null
                     };
                     await _context.UserProgresses.AddAsync(newProgress);
                 }

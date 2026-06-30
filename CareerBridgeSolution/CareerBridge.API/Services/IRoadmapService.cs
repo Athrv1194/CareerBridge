@@ -7,6 +7,6 @@ namespace CareerBridge.API.Services
     public interface IRoadmapService
     {
         Task<bool> UpdateStepStatusAsync(int userId, int roadmapStepId, bool isCompleted);
-        Task InitializeUserRoadmapAsync(int userId, int careerPathId);
+        Task InitializeUserRoadmapAsync(int userId, int careerPathId, int[]? preExistingSkillIds = null);
     }
 }
