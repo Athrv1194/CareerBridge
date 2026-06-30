@@ -44,3 +44,9 @@ incident_log.md
 # Security
 .env
 
+# System files
+.DS_Store
+
+# Extra exact matches
+apphost.exe
+*.sourceLink.json

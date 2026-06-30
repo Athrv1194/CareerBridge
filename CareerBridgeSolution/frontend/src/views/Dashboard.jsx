@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Card, ListGroup, Badge, Button } from 'react-bootstrap';
-import { getCareerPaths, getRoadmap } from '../services/dataService';
+import { getCareerPaths, getRoadmap, updateStepStatus } from '../services/dataService';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -58,6 +58,20 @@ const Dashboard = () => {
     const value = e.target.value;
     setSelectedPathId(value);
     console.log(`Selected Career Track ID: ${value}`);
+  };
+
+  const handleStatusChange = async (stepId, currentStatus) => {
+    const newStatus = currentStatus === 'Not Started' ? 'Completed' : 'Not Started';
+    try {
+      await updateStepStatus({ stepId, status: newStatus });
+      setRoadmap((prevRoadmap) =>
+        prevRoadmap.map((step) =>
+          step.id === stepId ? { ...step, status: newStatus } : step
+        )
+      );
+    } catch (err) {
+      console.error('Failed to update step status', err);
+    }
   };
 
   return (
@@ -143,11 +157,14 @@ const Dashboard = () => {
                             </Badge>
                             
                             {/* Toggle Button for aesthetics/completion */}
-                            {step.status !== 'Completed' && (
-                              <Button variant="outline-success" size="sm" className="rounded-pill px-3 fw-bold">
-                                Mark Done
-                              </Button>
-                            )}
+                            <Button 
+                              variant={step.status === 'Completed' ? 'outline-secondary' : 'outline-success'} 
+                              size="sm" 
+                              className="rounded-pill px-3 fw-bold"
+                              onClick={() => handleStatusChange(step.id, step.status)}
+                            >
+                              {step.status === 'Completed' ? 'Undo' : 'Mark Done'}
+                            </Button>
                           </div>
                         </ListGroup.Item>
                       ))}
