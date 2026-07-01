@@ -35,6 +35,18 @@ namespace CareerBridge.API.Extensions
             // Profile Module DI
             services.AddScoped<IStudentProfileRepository, StudentProfileRepository>();
             services.AddScoped<IStudentProfileService, StudentProfileService>();
+
+            // Assessment Module DI
+            services.AddScoped<CareerBridge.API.Repositories.Assessment.IAssessmentRepository, CareerBridge.API.Repositories.Assessment.AssessmentRepository>();
+            services.AddScoped<CareerBridge.API.Services.Assessment.IAssessmentService, CareerBridge.API.Services.Assessment.AssessmentService>();
+
+            // Recommendation Module DI
+            services.AddScoped<CareerBridge.API.Repositories.Recommendation.ICareerRecommendationRepository, CareerBridge.API.Repositories.Recommendation.CareerRecommendationRepository>();
+            services.AddScoped<CareerBridge.API.Services.Recommendation.ICareerRecommendationService, CareerBridge.API.Services.Recommendation.CareerRecommendationService>();
+
+            // Roadmap Module DI
+            services.AddScoped<CareerBridge.API.Repositories.Roadmap.IRoadmapRepository, CareerBridge.API.Repositories.Roadmap.RoadmapRepository>();
+            services.AddScoped<CareerBridge.API.Services.Roadmap.IRoadmapService, CareerBridge.API.Services.Roadmap.RoadmapService>();
         }
     }
 }

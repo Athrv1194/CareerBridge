@@ -3,23 +3,30 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // In a real application, you might decode the JWT here to set user roles/ID
-      setUser({ token });
+  const [user, setUser] = useState(() => {
+    const token = localStorage.getItem('careerbridge_token');
+    const userData = localStorage.getItem('careerbridge_user');
+    if (token && userData) {
+      try {
+        return JSON.parse(userData);
+      } catch (e) {
+        console.error("Failed to parse user data", e);
+        localStorage.removeItem('careerbridge_user');
+        return null;
+      }
     }
-  }, []);
+    return null;
+  });
 
-  const login = (token) => {
-    localStorage.setItem('token', token);
-    setUser({ token });
+  const login = (token, userObj) => {
+    localStorage.setItem('careerbridge_token', token);
+    localStorage.setItem('careerbridge_user', JSON.stringify(userObj));
+    setUser(userObj);
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('careerbridge_token');
+    localStorage.removeItem('careerbridge_user');
     setUser(null);
   };
 

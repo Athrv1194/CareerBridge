@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/dataService';
+import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
@@ -12,6 +13,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -28,10 +30,8 @@ const Login = () => {
     
     try {
       const response = await loginUser(formData);
-      localStorage.setItem('careerbridge_token', response.data.token);
-      localStorage.setItem('careerbridge_user', JSON.stringify(response.data.user));
-      window.dispatchEvent(new Event('auth-change'));
-      navigate('/');
+      login(response.data.token, response.data.user);
+      navigate('/onboarding');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {

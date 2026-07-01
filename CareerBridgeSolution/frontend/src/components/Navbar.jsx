@@ -17,8 +17,8 @@ const AppNavbar = () => {
     return null;
   }
 
-  // Check if token exists to render the logout button
-  const isAuthenticated = !!localStorage.getItem('token') || !!user;
+  // Use reactive user context to render the logout button
+  const isAuthenticated = !!user;
 
   return (
     <Navbar bg="light" expand="lg" className="shadow-sm">

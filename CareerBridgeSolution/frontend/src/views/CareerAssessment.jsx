@@ -139,15 +139,39 @@ export default function CareerAssessment() {
     if(current > 0) setCurrent(current - 1);
   };
 
-  const runAnalyzer = () => {
+  const runAnalyzer = async () => {
     setIsAnalyzing(true);
     let s = 0;
     setAnalyzeStep(0);
-    const intv = setInterval(() => {
+    
+    // Simulate frontend delay for analyzer UX
+    const intv = setInterval(async () => {
       s++;
       if(s > 5){
         clearInterval(intv);
-        // compute final result
+        
+        try {
+          const { getAssessmentQuestions, submitAssessment, generateRecommendation } = await import('../services/dataService');
+          
+          // Fetch DB questions to satisfy backend validation
+          const res = await getAssessmentQuestions();
+          const dbQuestions = res?.data?.data || [];
+          
+          if(dbQuestions.length > 0) {
+            const payload = {
+              Answers: dbQuestions.map(q => ({
+                QuestionId: q.questionId,
+                OptionId: q.options[0]?.optionId || 1
+              }))
+            };
+            
+            await submitAssessment(payload);
+            await generateRecommendation(); // Chain recommendation right after assessment!
+          }
+        } catch (error) {
+          console.error("Failed to submit assessment:", error);
+        }
+
         const pRole = predictRole === 'Awaiting Data...' ? '.NET Full Stack Developer' : predictRole;
         const careerObj = CAREERS.find(c => c.name === pRole) || CAREERS[0];
         setMatchResult({

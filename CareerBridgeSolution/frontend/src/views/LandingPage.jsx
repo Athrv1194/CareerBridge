@@ -1,11 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 import './LandingPage.css';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const constraintsRef = useRef(null);
+  const { user, logout } = useAuth();
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     // sticky header blur on scroll
@@ -81,8 +84,17 @@ const LandingPage = () => {
     </nav>
     <div className="nav-right">
       <button className="theme-toggle" aria-label="Toggle dark mode" title="Dark mode (coming soon)">🌙</button>
-      <button className="btn btn-ghost" onClick={() => navigate('/login')}>Log in</button>
-      <button className="btn btn-primary" onClick={() => navigate('/register')}>Register</button>
+      {isAuthenticated ? (
+        <>
+          <button className="btn btn-ghost" onClick={() => logout()}>Log out</button>
+          <button className="btn btn-primary" onClick={() => navigate('/student-dashboard')}>Dashboard</button>
+        </>
+      ) : (
+        <>
+          <button className="btn btn-ghost" onClick={() => navigate('/login')}>Log in</button>
+          <button className="btn btn-primary" onClick={() => navigate('/register')}>Register</button>
+        </>
+      )}
       <button className="mobile-toggle" aria-label="Menu"><span></span></button>
     </div>
   </div>

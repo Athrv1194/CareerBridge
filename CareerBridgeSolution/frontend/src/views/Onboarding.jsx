@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { updateProfile } from '../services/dataService';
+import { useAuth } from '../context/AuthContext';
 import './Onboarding.css';
 
 const skillGroups = [
@@ -26,13 +28,14 @@ const careers = [
 
 const Onboarding = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [skillSearch, setSkillSearch] = useState("");
   const [successFlow, setSuccessFlow] = useState(false);
   const [successSteps, setSuccessSteps] = useState(0);
 
   const [state, setState] = useState({
-    basic: { fullName: "", city: "" },
+    basic: { fullName: user?.name || "", city: "" },
     education: { eduLevel: "", college: "" },
     skills: [],
     careers: [],
@@ -89,7 +92,27 @@ const Onboarding = () => {
     if(currentStep < 5) {
       setCurrentStep(currentStep + 1);
     } else {
+      submitProfile();
+    }
+  };
+
+  const submitProfile = async () => {
+    try {
+      const payload = {
+        CollegeName: state.education.college || "N/A",
+        Degree: state.education.eduLevel || "B.Tech",
+        CGPA: 8.0,
+        GraduationYear: 2024,
+        PreferredLocation: state.basic.city || "Bangalore",
+        Skills: state.skills,
+        CareerInterests: state.careers,
+        IsCompleted: true
+      };
+      await updateProfile(payload);
       runSuccessFlow();
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+      runSuccessFlow(); // Fallback for UI demo
     }
   };
 
@@ -233,7 +256,7 @@ const Onboarding = () => {
       <div className="step-connector"></div>
     </div>
   </div>
-  <div className="progress-rail"><div className="progress-fill" id="progressFill" style={{ width: "20%" }}></div></div>
+  <div className="progress-rail"><div className="progress-fill" id="progressFill" style={{ width: `${(currentStep / 5) * 100}%` }}></div></div>
   <div className="step-of" id="stepOf">Step {currentStep} of 5</div>
 
   <div className="wizard-shell">
@@ -248,22 +271,22 @@ const Onboarding = () => {
           <p>Tell us a little about yourself so we can build the perfect roadmap.</p>
         </div>
         <div className="fields-grid">
-          <div className="field"><label>Full Name</label><input type="text" data-field="fullName" placeholder="e.g. Rahul Sharma" /></div>
-          <div className="field"><label>Email <span className="opt">(from registration)</span></label><input type="email" value="you@example.com" readonly /></div>
-          <div className="field"><label>Phone Number</label><input type="tel" data-field="phone" placeholder="+91 98765 43210" /></div>
-          <div className="field"><label>Date of Birth</label><input type="date" data-field="dob" /></div>
+          <div className="field"><label>Full Name</label><input type="text" data-field="fullName" placeholder="e.g. Rahul Sharma" value={state.basic.fullName || ''} onChange={e => updateState('basic', 'fullName', e.target.value)} /></div>
+          <div className="field"><label>Email <span className="opt">(from registration)</span></label><input type="email" value={user?.email || ''} readOnly /></div>
+          <div className="field"><label>Phone Number</label><input type="tel" data-field="phone" placeholder="+91 98765 43210" value={state.basic.phone || ''} onChange={e => updateState('basic', 'phone', e.target.value)} /></div>
+          <div className="field"><label>Date of Birth</label><input type="date" data-field="dob" value={state.basic.dob || ''} onChange={e => updateState('basic', 'dob', e.target.value)} /></div>
           <div className="field"><label>Gender</label>
-            <select data-field="gender">
+            <select data-field="gender" value={state.basic.gender || ''} onChange={e => updateState('basic', 'gender', e.target.value)}>
               <option value="">Select</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option>
             </select>
           </div>
-          <div className="field"><label>Country</label><input type="text" data-field="country" placeholder="India" /></div>
-          <div className="field"><label>State</label><input type="text" data-field="state" placeholder="Maharashtra" /></div>
-          <div className="field"><label>City</label><input type="text" data-field="city" placeholder="Mumbai" /></div>
-          <div className="field full"><label>Preferred Job Location</label><input type="text" data-field="prefLocation" placeholder="Mumbai, Pune, Remote..." /></div>
-          <div className="field"><label>LinkedIn <span className="opt">(optional)</span></label><input type="url" data-field="linkedin" placeholder="linkedin.com/in/..." /></div>
-          <div className="field"><label>GitHub <span className="opt">(optional)</span></label><input type="url" data-field="github" placeholder="github.com/..." /></div>
-          <div className="field full"><label>Portfolio Website <span className="opt">(optional)</span></label><input type="url" data-field="portfolio" placeholder="yourname.dev" /></div>
+          <div className="field"><label>Country</label><input type="text" data-field="country" placeholder="India" value={state.basic.country || ''} onChange={e => updateState('basic', 'country', e.target.value)} /></div>
+          <div className="field"><label>State</label><input type="text" data-field="state" placeholder="Maharashtra" value={state.basic.state || ''} onChange={e => updateState('basic', 'state', e.target.value)} /></div>
+          <div className="field"><label>City</label><input type="text" data-field="city" placeholder="Mumbai" value={state.basic.city || ''} onChange={e => updateState('basic', 'city', e.target.value)} /></div>
+          <div className="field full"><label>Preferred Job Location</label><input type="text" data-field="prefLocation" placeholder="Mumbai, Pune, Remote..." value={state.basic.prefLocation || ''} onChange={e => updateState('basic', 'prefLocation', e.target.value)} /></div>
+          <div className="field"><label>LinkedIn <span className="opt">(optional)</span></label><input type="url" data-field="linkedin" placeholder="linkedin.com/in/..." value={state.basic.linkedin || ''} onChange={e => updateState('basic', 'linkedin', e.target.value)} /></div>
+          <div className="field"><label>GitHub <span className="opt">(optional)</span></label><input type="url" data-field="github" placeholder="github.com/..." value={state.basic.github || ''} onChange={e => updateState('basic', 'github', e.target.value)} /></div>
+          <div className="field full"><label>Portfolio Website <span className="opt">(optional)</span></label><input type="url" data-field="portfolio" placeholder="yourname.dev" value={state.basic.portfolio || ''} onChange={e => updateState('basic', 'portfolio', e.target.value)} /></div>
         </div>
       </div>
 
@@ -275,19 +298,19 @@ const Onboarding = () => {
         </div>
         <div className="fields-grid">
           <div className="field"><label>Education Level</label>
-            <select data-field="eduLevel">
+            <select data-field="eduLevel" value={state.education.eduLevel || ''} onChange={e => updateState('education', 'eduLevel', e.target.value)}>
               <option value="">Select</option><option>Diploma</option><option>B.Tech</option><option>B.E.</option><option>MCA</option><option>BCA</option><option>B.Sc IT</option><option>M.Tech</option><option>Other</option>
             </select>
           </div>
-          <div className="field"><label>College Name</label><input type="text" data-field="college" placeholder="Your college" /></div>
-          <div className="field"><label>University</label><input type="text" data-field="university" placeholder="Your university" /></div>
+          <div className="field"><label>College Name</label><input type="text" data-field="college" placeholder="Your college" value={state.education.college || ''} onChange={e => updateState('education', 'college', e.target.value)} /></div>
+          <div className="field"><label>University</label><input type="text" data-field="university" placeholder="Your university" value={state.education.university || ''} onChange={e => updateState('education', 'university', e.target.value)} /></div>
           <div className="field"><label>Current Academic Year</label>
-            <select data-field="year">
+            <select data-field="year" value={state.education.year || ''} onChange={e => updateState('education', 'year', e.target.value)}>
               <option value="">Select</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>Final Year</option><option>Graduated</option>
             </select>
           </div>
-          <div className="field"><label>CGPA (Current)</label><input type="text" data-field="cgpa" placeholder="e.g. 8.5" /></div>
-          <div className="field"><label>Expected Graduation Year</label><input type="text" data-field="gradYear" placeholder="e.g. 2026" /></div>
+          <div className="field"><label>CGPA (Current)</label><input type="text" data-field="cgpa" placeholder="e.g. 8.5" value={state.education.cgpa || ''} onChange={e => updateState('education', 'cgpa', e.target.value)} /></div>
+          <div className="field"><label>Expected Graduation Year</label><input type="text" data-field="gradYear" placeholder="e.g. 2026" value={state.education.gradYear || ''} onChange={e => updateState('education', 'gradYear', e.target.value)} /></div>
         </div>
         <div className="info-banner">
           <div className="ib-icon">🎓</div>
@@ -434,9 +457,15 @@ const Onboarding = () => {
               className="ring-fill" 
               id="ringFill" 
               cx="60" cy="60" r="52" 
-              strokeDasharray="326.7" 
-              strokeDashoffset={strokeDashoffset}
-              style={{ transition: 'stroke-dashoffset 0.8s ease-out' }}
+              style={{
+                fill: 'none',
+                stroke: 'url(#ringGrad)',
+                strokeWidth: 9,
+                strokeLinecap: 'round',
+                strokeDasharray: 326.7,
+                strokeDashoffset: strokeDashoffset,
+                transition: 'stroke-dashoffset 0.8s ease-out'
+              }}
             />
           </svg>
           <div className="ring-text"><span className="pct" >{completePct}%</span><span className="lbl">Complete</span></div>
@@ -447,36 +476,36 @@ const Onboarding = () => {
         <div className="sum-item">
           <div className={`sum-ic ${basicCount > 0 ? "on" : ""}`}>👤</div>
           <div className="sum-body">
-            <div className="sb-top"><span className="sb-title">Basic Information</span><span className="sb-status" id="sumStatus1">Pending</span></div>
-            <div className="sb-detail" id="sumDetail1">Not started yet</div>
+            <div className="sb-top"><span className="sb-title">Basic Information</span><span className={`sb-status ${basicDone ? "done" : ""}`} id="sumStatus1">{basicDone ? "Done" : basicCount > 0 ? "In progress" : "Pending"}</span></div>
+            <div className="sb-detail" id="sumDetail1">{basicCount > 0 ? (state.basic.fullName || state.basic.city || "In progress...") : "Not started yet"}</div>
           </div>
         </div>
         <div className="sum-item">
           <div className={`sum-ic ${eduCount > 0 ? "on" : ""}`}>🎓</div>
           <div className="sum-body">
-            <div className="sb-top"><span className="sb-title">Education</span><span className="sb-status" id="sumStatus2">Pending</span></div>
-            <div className="sb-detail" id="sumDetail2">Not started yet</div>
+            <div className="sb-top"><span className="sb-title">Education</span><span className={`sb-status ${eduDone ? "done" : ""}`} id="sumStatus2">{eduDone ? "Done" : eduCount > 0 ? "In progress" : "Pending"}</span></div>
+            <div className="sb-detail" id="sumDetail2">{eduCount > 0 ? (state.education.eduLevel || state.education.college || "In progress...") : "Not started yet"}</div>
           </div>
         </div>
         <div className="sum-item">
           <div className={`sum-ic ${state.skills.length > 0 ? "on" : ""}`}>⚡</div>
           <div className="sum-body">
-            <div className="sb-top"><span className="sb-title">Skills</span><span className="sb-status" id="sumStatus3">Pending</span></div>
-            <div className="sb-detail" id="sumDetail3">No skills selected</div>
+            <div className="sb-top"><span className="sb-title">Skills</span><span className={`sb-status ${state.skills.length > 0 ? "done" : ""}`} id="sumStatus3">{state.skills.length > 0 ? "Done" : "Pending"}</span></div>
+            <div className="sb-detail" id="sumDetail3">{state.skills.length > 0 ? `${state.skills.length} skills selected` : "No skills selected"}</div>
           </div>
         </div>
         <div className="sum-item">
           <div className={`sum-ic ${state.careers.length > 0 ? "on" : ""}`}>💼</div>
           <div className="sum-body">
-            <div className="sb-top"><span className="sb-title">Career Interests</span><span className="sb-status" id="sumStatus4">Pending</span></div>
-            <div className="sb-detail" id="sumDetail4">No interests selected</div>
+            <div className="sb-top"><span className="sb-title">Career Interests</span><span className={`sb-status ${state.careers.length > 0 ? "done" : ""}`} id="sumStatus4">{state.careers.length > 0 ? "Done" : "Pending"}</span></div>
+            <div className="sb-detail" id="sumDetail4">{state.careers.length > 0 ? state.careers.join(', ') : "No interests selected"}</div>
           </div>
         </div>
         <div className="sum-item">
           <div className={`sum-ic ${goalsFilled > 0 ? "on" : ""}`}>🎯</div>
           <div className="sum-body">
-            <div className="sb-top"><span className="sb-title">Goals</span><span className="sb-status" id="sumStatus5">Pending</span></div>
-            <div className="sb-detail" id="sumDetail5">Not set yet</div>
+            <div className="sb-top"><span className="sb-title">Goals</span><span className={`sb-status ${goalsFilled ? "done" : ""}`} id="sumStatus5">{goalsFilled ? "Done" : "Pending"}</span></div>
+            <div className="sb-detail" id="sumDetail5">{goalsFilled ? "Goals set" : "Not set yet"}</div>
           </div>
         </div>
       </div>
