@@ -8,6 +8,12 @@
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
+  --primary: #2563EB;
+  --secondary: #7C3AED;
+  --ink: #0F172A;
+  --ink-soft: #475569;
+  --line: #E2E8F0;
+  --card-bg: rgba(255, 255, 255, 0.7);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
@@ -55,11 +61,6 @@ body {
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -109,3 +110,20 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* Global Logo Styles */
+.logo { font-size:22px; font-weight:800; color:var(--primary); display:flex; align-items:center; gap:8px; text-decoration:none; }
+.logo-mark { width:24px; height:24px; background:linear-gradient(135deg, #2563EB, #7C3AED); border-radius:6px; display:inline-flex; align-items:center; justify-content:center; }
+.logo-mark::after { content:''; border:solid white; border-width:0 2.5px 2.5px 0; display:inline-block; padding:3px; transform:rotate(-135deg); margin-top:2px; }
+
+/* Autofill Fix for Input Fields */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: var(--ink) !important;
+}
+
+/* Fix invisible date picker icon on white background in dark mode */
+input[type="date"] { color-scheme: light; }

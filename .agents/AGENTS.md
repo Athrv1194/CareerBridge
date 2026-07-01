@@ -43,6 +43,7 @@ To support non-blocking parallel development across the team without merge confl
    - If a required backend endpoint is missing, return a resolved JavaScript `Promise` containing a local JSON object that matches the project schema.
 5. **Explicit Placeholders**: Clearly comment all stubs with `// PLACEHOLDER:` and `// TODO:` tags to highlight temporary bridges so teammates can instantly locate and swap them to live connections later.
 
+<!--
 ## Mandatory Post-Execution Individual Hand-Off & Contribution Report
 Every time a code generation task is completed, you MUST conclude the output with a hyper-focused, individual contribution report written explicitly for the active team member.
 
@@ -81,3 +82,4 @@ Anticipate 2 direct questions a professor will ask you to test if you actually c
 * Detail the exact inputs your code expects from the previous teammate.
 * Detail the exact output data shape your code passes forward to the next teammate.
 ======================================================================
+-->

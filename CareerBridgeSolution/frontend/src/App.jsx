@@ -2,7 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './views/Login';
 import Register from './views/Register';
+import Onboarding from './views/Onboarding';
 import Dashboard from './views/Dashboard';
+import LandingPage from './views/LandingPage';
 import AppNavbar from './components/Navbar';
 import './App.css';
 
@@ -11,9 +13,10 @@ function App() {
     <BrowserRouter>
       <AppNavbar />
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/onboarding" element={<Onboarding />} />
         <Route 
           path="/dashboard" 
           element={
