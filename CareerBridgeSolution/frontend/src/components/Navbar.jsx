@@ -13,7 +13,7 @@ const AppNavbar = () => {
   };
 
   const location = useLocation();
-  if (['/', '/login', '/register'].includes(location.pathname)) {
+  if (['/', '/login', '/register', '/onboarding', '/assessment'].includes(location.pathname)) {
     return null;
   }
 

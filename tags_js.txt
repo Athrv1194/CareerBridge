@@ -1,0 +1,13 @@
+else if(q.type==='tags'){
+    const sel = answers[q.id] || [];
+    bodyHTML = `
+      <input type="text" class="search-input" id="langSearch" placeholder="Search a language (e.g. Python, C#, JavaScript)...">
+      <div class="chip-row" id="langChips">
+        ${LANGUAGES.map(l=>`<div class="chip ${sel.includes(l)?'selected':''}" data-val="${l}">${l}</div>`).join('')}
+      </div>
+      <div class="selected-chips" id="selectedLangs">
+        ${sel.map(l=>`<span class="tag-chip">${l}<button data-val="${l}">✕</button></span>`).join('')}
+      </div>`;
+  }
+
+  else if

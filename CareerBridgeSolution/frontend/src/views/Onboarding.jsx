@@ -106,7 +106,7 @@ const Onboarding = () => {
         i++;
       } else {
         clearInterval(interval);
-        setTimeout(() => navigate('/'), 1000); // Redirect to dashboard
+        setTimeout(() => navigate('/assessment'), 1000); // Redirect to assessment
       }
     }, 650);
   };
@@ -179,9 +179,31 @@ const Onboarding = () => {
   <div className="blob blob2"></div>
 </div>
 
+      <header>
+        <div className="container nav-row">
+          <div className="logo" style={{cursor: 'pointer'}} onClick={() => navigate('/dashboard')}><span className="logo-mark"></span>CareerBridge</div>
+          
+          <div className="stepper" id="stepper">
+            <div className="step active"><span className="step-dot">1</span><span className="step-label">Profile Setup</span></div>
+            <div className="step-line"></div>
+            <div className="step"><span className="step-dot">2</span><span className="step-label">Career Assessment</span></div>
+            <div className="step-line"></div>
+            <div className="step"><span className="step-dot">3</span><span className="step-label">Recommendation</span></div>
+            <div className="step-line"></div>
+            <div className="step"><span className="step-dot">4</span><span className="step-label">Roadmap</span></div>
+            <div className="step-line"></div>
+            <div className="step"><span className="step-dot">5</span><span className="step-label">Placement</span></div>
+          </div>
 
+          <div className="nav-right">
+            <button className="icon-btn">🌙</button>
+            <button className="icon-btn">🔔</button>
+            <button className="icon-btn">❓</button>
+          </div>
+        </div>
+      </header>
 
-<div className="container">
+<div className="container" style={{position: 'relative', zIndex: 10, marginTop: '2rem'}}>
 
   {/* STEP TRACKER */}
   <div className="step-tracker" id="stepTracker">
