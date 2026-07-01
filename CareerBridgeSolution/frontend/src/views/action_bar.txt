@@ -1,8 +1,0 @@
-
-      <button class="btn btn-ghost" id="prevBtn" ${current===0?'disabled':''}>← Previous</button>
-      <div class="bar-right">
-        <button class="btn btn-text" id="saveBtn">Save Progress</button>
-        ${current===QUESTIONS.length-1
-          ? `<button class="btn btn-primary btn-analyze" id="nextBtn">Analyze My Career ✨</button>`
-          : `<button class="btn btn-primary" id="nextBtn">Next →</button>`}
-      

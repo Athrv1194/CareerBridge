@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Features — CareerBridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --primary:#2563EB;
+  --secondary:#7C3AED;
+  --accent:#06B6D4;
+  --success:#22C55E;
+  --warning:#F59E0B;
+  --danger:#EF4444;
+  --ink:#0F172A;
+  --ink-soft:#475569;
+  --ink-faint:#94A3B8;
+  --line:#E2E8F0;
+  --bg:#FBFCFE;
+  --card-bg: rgba(255,255,255,0.7);
+  --radius:18px;
+  --shadow-soft: 0 10px 40px -12px rgba(37,99,235,0.18);
+  --shadow-lift: 0 24px 60px -20px rgba(37,99,235,0.32);
+  --maxw:1240px;
+}
+[data-theme="dark"]{
+  --ink:#F1F5F9;
+  --ink-soft:#94A3B8;
+  --ink-faint:#64748B;
+  --line:#1E293B;
+  --bg:#0B1120;
+  --card-bg: rgba(255,255,255,0.05);
+  --shadow-soft: 0 10px 40px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 24px 60px -20px rgba(0,0,0,0.6);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0; font-family:'Inter',sans-serif; color:var(--ink); background:var(--bg); -webkit-font-smoothing:antialiased; overflow-x:hidden; transition:background .35s ease, color .35s ease;}
+h1,h2,h3,h4,.display{font-family:'Lexend',sans-serif; letter-spacing:-0.02em; margin:0;}
+p{margin:0; color:var(--ink-soft); line-height:1.65;}
+a{text-decoration:none; color:inherit;}
+.container{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+ul{list-style:none; margin:0; padding:0;}
+button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+section{scroll-margin-top:84px;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+}
+
+/* ---------- background ---------- */
+.bg-field{position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none;}
+.blob{position:absolute; border-radius:50%; filter:blur(80px); opacity:0.3;}
+[data-theme="dark"] .blob{opacity:0.42;}
+.blob1{width:540px; height:540px; background:radial-gradient(circle, var(--primary), transparent 70%); top:-180px; left:-160px;}
+.blob2{width:480px; height:480px; background:radial-gradient(circle, var(--secondary), transparent 70%); top:900px; right:-220px; opacity:0.22;}
+.blob3{width:420px; height:420px; background:radial-gradient(circle, var(--accent), transparent 70%); top:2200px; left:20%; opacity:0.2;}
+.blob4{width:460px; height:460px; background:radial-gradient(circle, var(--primary), transparent 70%); top:3600px; right:10%; opacity:0.18;}
+.grid-overlay{position:absolute; inset:0; background-image:linear-gradient(to right, rgba(37,99,235,0.045) 1px, transparent 1px), linear-gradient(to bottom, rgba(37,99,235,0.045) 1px, transparent 1px); background-size:64px 64px; mask-image:radial-gradient(ellipse 80% 30% at 50% 0%, black 40%, transparent 90%);}
+
+/* ---------- header ---------- */
+header{position:sticky; top:0; z-index:200; padding:16px 0; transition:all .35s ease;}
+header.scrolled{background:rgba(251,252,254,0.78); backdrop-filter:blur(16px) saturate(160%); border-bottom:1px solid rgba(226,232,240,0.8); box-shadow:0 4px 24px -8px rgba(15,23,42,0.06);}
+[data-theme="dark"] header.scrolled{background:rgba(11,17,32,0.78); border-bottom:1px solid rgba(255,255,255,0.06);}
+.nav-row{display:flex; align-items:center; justify-content:space-between; gap:20px;}
+.logo{display:flex; align-items:center; gap:10px; font-weight:700; font-size:19px; font-family:'Lexend',sans-serif; flex-shrink:0;}
+.logo-mark{width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,var(--primary),var(--secondary)); position:relative; flex-shrink:0;}
+.logo-mark::after{content:''; position:absolute; inset:8px; border:2px solid white; border-radius:4px; border-right:none; border-bottom:none; transform:rotate(45deg);}
+.main-nav{display:flex; align-items:center; gap:30px; flex:1; justify-content:center;}
+.main-nav a{font-size:14px; font-weight:600; color:var(--ink-soft); position:relative; padding:6px 0; transition:color .2s ease;}
+.main-nav a:hover{color:var(--ink);}
+.main-nav a.active{color:var(--primary);}
+.main-nav a.active::after{content:''; position:absolute; left:0; right:0; bottom:-4px; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--primary),var(--secondary));}
+.nav-right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+.icon-btn{width:38px; height:38px; border-radius:10px; background:rgba(37,99,235,0.07); display:flex; align-items:center; justify-content:center; transition:all .2s ease; font-size:15px;}
+.icon-btn:hover{background:rgba(37,99,235,0.14);}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:11px 20px; border-radius:11px; font-weight:700; font-size:13.5px; transition:all .2s ease; white-space:nowrap;}
+.btn-ghost{color:var(--ink); border:1.5px solid var(--line);}
+.btn-ghost:hover{border-color:rgba(37,99,235,0.35); background:rgba(37,99,235,0.05);}
+.btn-primary{color:#fff; background:linear-gradient(135deg,var(--primary),var(--secondary)); box-shadow:0 8px 22px -8px rgba(37,99,235,0.5);}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 28px -8px rgba(37,99,235,0.55);}
+.btn-outline{background:transparent; border:1.5px solid rgba(255,255,255,0.5); color:#fff;}
+.btn-outline:hover{background:rgba(255,255,255,0.1);}
+@media (max-width:980px){ .main-nav{display:none;} }
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 40px;}
+.hero-grid{display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center;}
+.eyebrow{display:inline-flex; align-items:center; gap:8px; padding:6px 13px; border-radius:999px; background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.18); font-size:12.5px; font-weight:700; color:var(--primary); margin-bottom:18px;}
+.hero h1{font-size:44px; font-weight:800; line-height:1.12; margin-bottom:18px;}
+.hero h1 .grad{background:linear-gradient(120deg,var(--primary),var(--secondary) 60%,var(--accent)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.hero p.lead{font-size:16px; max-width:480px; margin-bottom:28px;}
+.hero-ctas{display:flex; gap:14px; margin-bottom:26px;}
+.avatar-row{display:flex; align-items:center; gap:12px;}
+.avatar-stack{display:flex;}
+.avatar-stack span{width:34px; height:34px; border-radius:50%; border:2.5px solid var(--bg); margin-left:-10px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff;}
+.avatar-stack span:first-child{margin-left:0;}
+.avatar-row .txt{font-size:12.5px; color:var(--ink-soft); font-weight:600;}
+
+/* hero mock dashboard visual */
+.hero-visual{position:relative;}
+.mock-window{border-radius:20px; background:var(--card-bg); backdrop-filter:blur(18px); border:1px solid var(--line); box-shadow:var(--shadow-lift); padding:18px; position:relative; z-index:2;}
+.mock-topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
+.mock-dots{display:flex; gap:5px;}
+.mock-dots span{width:8px; height:8px; border-radius:50%; background:var(--line);}
+.mock-title{font-size:12.5px; font-weight:700; color:var(--ink-soft);}
+.mock-stats{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px;}
+.mock-stat{border-radius:12px; background:rgba(37,99,235,0.05); border:1px solid var(--line); padding:12px; text-align:center;}
+.mock-stat .n{font-family:'Lexend',sans-serif; font-weight:800; font-size:19px;}
+.mock-stat .l{font-size:10px; color:var(--ink-faint); font-weight:600; margin-top:2px;}
+.mock-row{display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; background:rgba(37,99,235,0.04); margin-bottom:8px;}
+.mock-row .ic{width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:14px; color:#fff; flex-shrink:0;}
+.mock-row .txt{flex:1;}
+.mock-row .t1{font-size:12px; font-weight:700;}
+.mock-row .t2{font-size:10.5px; color:var(--ink-faint);}
+.float-chip{position:absolute; border-radius:14px; background:var(--card-bg); backdrop-filter:blur(14px); border:1px solid var(--line); box-shadow:var(--shadow-soft); padding:12px 16px; z-index:3; animation:floatY 5s ease-in-out infinite;}
+.float-chip.c1{top:-18px; left:-30px; animation-delay:0.3s;}
+.float-chip.c2{bottom:-16px; right:-24px; animation-delay:1s;}
+@keyframes floatY{0%,100%{transform:translateY(0);} 50%{transform:translateY(-9px);}}
+.float-chip .l{font-size:10px; color:var(--ink-faint); font-weight:700; text-transform:uppercase;}
+.float-chip .v{font-size:14px; font-weight:800; font-family:'Lexend',sans-serif;}
+
+@media (max-width:980px){ .hero-grid{grid-template-columns:1fr;} .hero h1{font-size:32px;} }
+
+/* ---------- section head generic ---------- */
+.sec-tag{display:inline-flex; align-items:center; gap:7px; padding:6px 13px; border-radius:999px; background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.18); font-size:12px; font-weight:700; color:var(--primary); margin-bottom:14px;}
+.sec-head{text-align:center; max-width:640px; margin:0 auto 44px;}
+.sec-head h2{font-size:32px; font-weight:800; margin-bottom:12px;}
+.sec-head p{font-size:15px;}
+
+/* ---------- why careerbridge ---------- */
+.why-sec{padding:70px 0;}
+.why-grid{display:grid; grid-template-columns:1fr 1fr; gap:30px;}
+.why-card{border-radius:22px; padding:30px; position:relative; overflow:hidden;}
+.why-bad{background:linear-gradient(160deg, rgba(239,68,68,0.06), rgba(239,68,68,0.02)); border:1px solid rgba(239,68,68,0.15);}
+.why-good{background:linear-gradient(160deg, rgba(34,197,94,0.07), rgba(6,182,212,0.04)); border:1px solid rgba(34,197,94,0.18);}
+.why-card h3{font-size:21px; font-weight:800; margin-bottom:6px;}
+.why-bad h3{color:var(--danger);}
+.why-good h3{color:var(--success);}
+.why-card .sub{font-size:13px; color:var(--ink-soft); margin-bottom:20px;}
+.why-list{display:flex; flex-direction:column; gap:13px;}
+.why-item{display:flex; align-items:center; gap:12px; font-size:14px; font-weight:600;}
+.why-item .mk{width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; color:#fff;}
+.why-bad .mk{background:var(--danger);}
+.why-good .mk{background:var(--success);}
+@media (max-width:900px){ .why-grid{grid-template-columns:1fr;} }
+
+/* ---------- core features ---------- */
+.features-sec{padding:70px 0;}
+.feat-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:16px;}
+.feat-card{border-radius:18px; padding:22px; background:var(--card-bg); backdrop-filter:blur(14px); border:1px solid var(--line); box-shadow:var(--shadow-soft); transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease; cursor:pointer;}
+.feat-card:hover{transform:translateY(-5px); box-shadow:var(--shadow-lift); border-color:rgba(37,99,235,0.3);}
+.feat-ic{width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:21px; color:#fff; margin-bottom:16px;}
+.feat-card h4{font-size:15px; font-weight:700; margin-bottom:6px;}
+.feat-card p{font-size:12.5px;}
+@media (max-width:1100px){ .feat-grid{grid-template-columns:repeat(3,1fr);} }
+@media (max-width:700px){ .feat-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:480px){ .feat-grid{grid-template-columns:1fr;} }
+
+/* ---------- workflow ---------- */
+.flow-sec{padding:70px 0;}
+.flow-track{display:flex; align-items:center; justify-content:space-between; position:relative; flex-wrap:wrap; gap:22px 0;}
+.flow-track::before{content:''; position:absolute; top:26px; left:5%; right:5%; height:2px; background:repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 14px); z-index:0;}
+.flow-node{display:flex; flex-direction:column; align-items:center; gap:10px; position:relative; z-index:1; flex:1; min-width:110px;}
+.flow-dot{width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:21px; color:#fff; box-shadow:0 10px 24px -8px rgba(37,99,235,0.4); border:3px solid var(--bg);}
+.flow-node .lbl{font-size:12.5px; font-weight:700; text-align:center;}
+@media (max-width:900px){ .flow-track{flex-direction:column;} .flow-track::before{display:none;} .flow-node{flex-direction:row; width:100%; justify-content:flex-start;} }
+
+/* ---------- dashboard preview ---------- */
+.dash-sec{padding:70px 0;}
+.dash-mock{border-radius:24px; padding:26px; background:var(--card-bg); backdrop-filter:blur(18px); border:1px solid var(--line); box-shadow:var(--shadow-lift);}
+.dash-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:16px;}
+.dm-card{border-radius:16px; padding:18px; background:rgba(37,99,235,0.04); border:1px solid var(--line);}
+.dm-card h5{font-size:12.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.03em; margin-bottom:14px;}
+.dm-ring{width:64px; height:64px; margin:0 auto 8px; position:relative;}
+.dm-ring svg{transform:rotate(-90deg);}
+.dm-ring-pct{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Lexend',sans-serif; font-size:13px;}
+.dm-bar-row{display:flex; align-items:center; justify-content:space-between; font-size:11.5px; font-weight:600; margin-bottom:6px;}
+.dm-bar-track{height:6px; border-radius:6px; background:var(--line); overflow:hidden; margin-bottom:12px;}
+.dm-bar-fill{height:100%; border-radius:6px;}
+.dm-achieve{display:flex; align-items:center; gap:8px; font-size:11.5px; font-weight:600; margin-bottom:8px;}
+.dm-achieve .ic{width:22px; height:22px; border-radius:7px; background:rgba(34,197,94,0.14); color:var(--success); display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;}
+@media (max-width:1000px){ .dash-grid{grid-template-columns:1fr 1fr;} }
+@media (max-width:600px){ .dash-grid{grid-template-columns:1fr;} }
+
+/* ---------- AI assistant showcase ---------- */
+.ai-sec{padding:70px 0;}
+.ai-chat{max-width:600px; margin:0 auto; border-radius:22px; padding:26px; background:linear-gradient(165deg, rgba(37,99,235,0.06), rgba(124,58,237,0.05)); border:1px solid rgba(124,58,237,0.18); box-shadow:var(--shadow-lift);}
+.ai-chat-head{display:flex; align-items:center; gap:10px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px dashed var(--line);}
+.ai-orb-sm{width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary),var(--accent)); display:flex; align-items:center; justify-content:center; font-size:17px; color:#fff; position:relative;}
+.ai-orb-sm::after{content:''; position:absolute; inset:-4px; border-radius:50%; border:1.5px solid rgba(124,58,237,0.3); animation:pulseRing 2s ease-out infinite;}
+@keyframes pulseRing{0%{transform:scale(0.7); opacity:0.8;} 100%{transform:scale(1.5); opacity:0;}}
+.bubble{max-width:82%; padding:13px 16px; border-radius:16px; font-size:13.5px; line-height:1.55; margin-bottom:12px;}
+.bubble.user{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; margin-left:auto; border-bottom-right-radius:4px;}
+.bubble.ai{background:var(--card-bg); border:1px solid var(--line); border-bottom-left-radius:4px;}
+.bubble ul{margin-top:8px; padding-left:2px;}
+.bubble li{list-style:none; padding-left:20px; position:relative; margin-bottom:5px; font-size:13px;}
+.bubble li::before{content:'•'; position:absolute; left:4px; color:var(--primary); font-weight:800;}
+
+/* ---------- resume analysis ---------- */
+.resume-sec{padding:70px 0;}
+.resume-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:30px; align-items:stretch;}
+.resume-doc{border-radius:20px; padding:26px; background:var(--card-bg); backdrop-filter:blur(14px); border:1px solid var(--line); box-shadow:var(--shadow-soft);}
+.resume-doc .rname{font-size:17px; font-weight:800; margin-bottom:2px;}
+.resume-doc .rrole{font-size:12.5px; color:var(--ink-faint); margin-bottom:18px;}
+.resume-line{height:8px; border-radius:4px; background:var(--line); margin-bottom:10px;}
+.resume-analysis{border-radius:20px; padding:26px; background:var(--card-bg); backdrop-filter:blur(14px); border:1px solid var(--line); box-shadow:var(--shadow-soft); display:flex; flex-direction:column; gap:18px;}
+.ats-row{display:flex; align-items:center; justify-content:space-between;}
+.ats-score{display:flex; align-items:center; gap:12px;}
+.skill-tag-row{display:flex; flex-wrap:wrap; gap:8px;}
+.skill-tag{font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:999px;}
+.skill-tag.good{background:rgba(34,197,94,0.12); color:var(--success);}
+.skill-tag.miss{background:rgba(239,68,68,0.1); color:var(--danger);}
+.sugg-item{display:flex; align-items:center; gap:9px; font-size:12.5px; font-weight:600;}
+.sugg-item .ic{color:var(--success); font-size:13px;}
+@media (max-width:900px){ .resume-grid{grid-template-columns:1fr;} }
+
+/* ---------- placement readiness ---------- */
+.placement-sec{padding:70px 0;}
+.placement-wrap{display:flex; align-items:center; justify-content:center; gap:60px; flex-wrap:wrap;}
+.big-gauge{width:190px; height:190px; position:relative; flex-shrink:0;}
+.big-gauge svg{transform:rotate(-90deg);}
+.big-gauge-pct{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.big-gauge-pct .n{font-size:42px; font-weight:800; font-family:'Lexend',sans-serif;}
+.big-gauge-pct .l{font-size:12px; color:var(--ink-faint); font-weight:600;}
+.breakdown-list{display:flex; flex-direction:column; gap:16px; min-width:300px;}
+.bd-row{display:flex; align-items:center; gap:14px;}
+.bd-row .k{width:110px; font-size:13.5px; font-weight:700; flex-shrink:0;}
+.bd-row .track{flex:1; height:8px; border-radius:6px; background:var(--line); overflow:hidden;}
+.bd-row .fill{height:100%; border-radius:6px;}
+.bd-row .pct{width:38px; text-align:right; font-size:12.5px; font-weight:700; color:var(--ink-soft);}
+
+/* ---------- journey timeline ---------- */
+.journey-sec{padding:70px 0;}
+.journey-track{display:flex; align-items:flex-start; justify-content:space-between; position:relative;}
+.journey-track::before{content:''; position:absolute; top:22px; left:6%; right:6%; height:2px; background:var(--line); z-index:0;}
+.journey-node{display:flex; flex-direction:column; align-items:center; gap:12px; flex:1; position:relative; z-index:1;}
+.journey-dot{width:44px; height:44px; border-radius:50%; background:#fff; border:2.5px solid var(--primary); display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--primary); font-family:'Lexend',sans-serif;}
+[data-theme="dark"] .journey-dot{background:var(--bg);}
+.journey-node .lbl{font-size:13px; font-weight:700; text-align:center;}
+@media (max-width:900px){ .journey-track{flex-direction:column; gap:22px;} .journey-track::before{display:none;} .journey-node{flex-direction:row; justify-content:flex-start;} }
+
+/* ---------- stats ---------- */
+.stats-sec{padding:60px 0;}
+.stats-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:16px;}
+.stat-box{border-radius:18px; padding:24px 16px; text-align:center; background:var(--card-bg); backdrop-filter:blur(14px); border:1px solid var(--line); box-shadow:var(--shadow-soft);}
+.stat-box .n{font-size:26px; font-weight:800; font-family:'Lexend',sans-serif; background:linear-gradient(120deg,var(--primary),var(--secondary)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.stat-box .l{font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:4px;}
+@media (max-width:900px){ .stats-grid{grid-template-columns:repeat(3,1fr);} }
+@media (max-width:560px){ .stats-grid{grid-template-columns:repeat(2,1fr);} }
+
+/* ---------- final CTA ---------- */
+.cta-sec{padding:30px 0 80px;}
+.cta-band{border-radius:28px; padding:56px 40px; text-align:center; position:relative; overflow:hidden; background:linear-gradient(120deg,#0F172A,#1E3A8A 55%,#4C1D95); color:#fff;}
+[data-theme="dark"] .cta-band{background:linear-gradient(120deg,#060A14,#14204A 55%,#2E1065);}
+.cta-band::before{content:''; position:absolute; inset:0; background-image:radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size:26px 26px;}
+.cta-band h2{position:relative; z-index:1; font-size:34px; font-weight:800; margin-bottom:14px;}
+.cta-band p{position:relative; z-index:1; color:rgba(255,255,255,0.75); font-size:15px; margin-bottom:28px;}
+.cta-band .ctas{position:relative; z-index:1; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+
+/* ---------- footer ---------- */
+footer{padding:50px 0 26px; border-top:1px solid var(--line);}
+.footer-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr; gap:30px; margin-bottom:36px;}
+.footer-brand p{font-size:13px; max-width:220px; margin:12px 0 16px;}
+.footer-col h5{font-size:13px; font-weight:700; margin-bottom:14px;}
+.footer-col a{display:block; font-size:13px; color:var(--ink-soft); margin-bottom:10px; transition:color .2s ease;}
+.footer-col a:hover{color:var(--primary);}
+.footer-social{display:flex; gap:10px;}
+.newsletter-input{display:flex; gap:8px; margin-top:8px;}
+.newsletter-input input{flex:1; padding:10px 12px; border-radius:10px; border:1.5px solid var(--line); background:transparent; color:var(--ink); font-size:12.5px; font-family:inherit;}
+.newsletter-input button{width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; flex-shrink:0; font-weight:700;}
+.footer-bottom{display:flex; align-items:center; justify-content:space-between; padding-top:22px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-faint); flex-wrap:wrap; gap:10px;}
+@media (max-width:900px){ .footer-grid{grid-template-columns:1fr 1fr;} }
+
+.fade-in{opacity:0; transform:translateY(18px); transition:opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1);}
+.fade-in.in-view{opacity:1; transform:translateY(0);}
+</style>
+</head>
+<body data-theme="light">
+
+<div class="bg-field"><div class="grid-overlay"></div><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div><div class="blob blob4"></div></div>
+
+<!-- HEADER -->
+<header id="siteHeader">
+  <div class="container nav-row">
+    <a href="#" class="logo"><span class="logo-mark"></span>CareerBridge</a>
+    <nav class="main-nav">
+      <a href="#hero">Home</a>
+      <a href="#core-features" class="active">Features</a>
+      <a href="#workflow">How It Works</a>
+      <a href="#dashboard-preview">Dashboard</a>
+      <a href="#placement-readiness">Placement</a>
+      <a href="#final-cta">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeToggle">🌙</button>
+      <a href="#" class="btn btn-ghost">Login</a>
+      <a href="#final-cta" class="btn btn-primary">Start Free</a>
+    </div>
+  </div>
+</header>
+
+<!-- SECTION 1: HERO -->
+<section class="hero" id="hero">
+  <div class="container hero-grid">
+    <div class="fade-in">
+      <span class="eyebrow">✨ Features</span>
+      <h1>Everything You Need to Become <span class="grad">Placement Ready.</span></h1>
+      <p class="lead">CareerBridge combines career guidance, AI, roadmaps, projects, assessments, and analytics into one intelligent platform.</p>
+      <div class="hero-ctas">
+        <a href="#final-cta" class="btn btn-primary">Start Free →</a>
+        <a href="#ai-assistant" class="btn btn-ghost">▶ Watch Demo</a>
+      </div>
+      <div class="avatar-row">
+        <div class="avatar-stack">
+          <span style="background:linear-gradient(135deg,#2563EB,#3B82F6);">A</span>
+          <span style="background:linear-gradient(135deg,#7C3AED,#A78BFA);">S</span>
+          <span style="background:linear-gradient(135deg,#06B6D4,#22D3EE);">R</span>
+          <span style="background:linear-gradient(135deg,#F59E0B,#FBBF24);">+</span>
+        </div>
+        <span class="txt">Join 10,000+ students building their future</span>
+      </div>
+    </div>
+
+    <div class="hero-visual fade-in">
+      <div class="float-chip c1"><div class="l">AI Score</div><div class="v">82/100</div></div>
+      <div class="float-chip c2"><div class="l">Skills Tracked</div><div class="v">120+</div></div>
+      <div class="mock-window">
+        <div class="mock-topbar"><div class="mock-dots"><span></span><span></span><span></span></div><div class="mock-title">Welcome back, Akash 👋</div><div></div></div>
+        <div class="mock-stats">
+          <div class="mock-stat"><div class="n" style="color:var(--success);">82%</div><div class="l">Placement</div></div>
+          <div class="mock-stat"><div class="n" style="color:var(--primary);">68%</div><div class="l">Roadmap</div></div>
+          <div class="mock-stat"><div class="n" style="color:var(--warning);">24</div><div class="l">Day Streak</div></div>
+        </div>
+        <div class="mock-row"><div class="ic" style="background:linear-gradient(135deg,var(--primary),var(--secondary));">💻</div><div class="txt"><div class="t1">Recommended Project</div><div class="t2">E-commerce Web App</div></div></div>
+        <div class="mock-row"><div class="ic" style="background:linear-gradient(135deg,var(--accent),#22D3EE);">📝</div><div class="txt"><div class="t1">Upcoming Assessment</div><div class="t2">React Advanced Test</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: WHY CAREERBRIDGE -->
+<section class="why-sec" id="why">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-tag">The Problem</span>
+      <h2>Stop Learning Randomly</h2>
+      <p>Most students juggle dozens of tutorials with no clear direction. CareerBridge solves all of that with one personalized platform.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card why-bad fade-in">
+        <h3>😵 Students Struggle With</h3>
+        <div class="sub">Scattered learning, no clarity, no outcomes.</div>
+        <div class="why-list">
+          <div class="why-item"><span class="mk">✕</span>No learning direction</div>
+          <div class="why-item"><span class="mk">✕</span>No structured roadmap</div>
+          <div class="why-item"><span class="mk">✕</span>No project guidance</div>
+          <div class="why-item"><span class="mk">✕</span>No progress tracking</div>
+          <div class="why-item"><span class="mk">✕</span>No placement preparation</div>
+        </div>
+      </div>
+      <div class="why-card why-good fade-in">
+        <h3>✅ We Solve All of These</h3>
+        <div class="sub">One personalized platform for your entire journey.</div>
+        <div class="why-list">
+          <div class="why-item"><span class="mk">✓</span>Personalized learning paths</div>
+          <div class="why-item"><span class="mk">✓</span>Structured roadmaps</div>
+          <div class="why-item"><span class="mk">✓</span>Industry projects</div>
+          <div class="why-item"><span class="mk">✓</span>Progress tracking</div>
+          <div class="why-item"><span class="mk">✓</span>Placement preparation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: CORE FEATURES -->
+<section class="features-sec" id="core-features">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-tag">Core Features</span>
+      <h2>Built for Every Step of Your Journey</h2>
+      <p>Every module works together — from your first assessment to your first offer letter.</p>
+    </div>
+    <div class="feat-grid">
+      <a href="#hero" class="feat-card fade-in" data-target="hero">
+        <div class="feat-ic" style="background:linear-gradient(135deg,var(--primary),var(--secondary));">🧠</div>
+        <h4>AI Career Recommendation</h4><p>Get AI-powered career suggestions based on your skills, interests &amp; goals.</p>
+      </a>
+      <a href="#dashboard-preview" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,#3B82F6,var(--primary));">🛣️</div>
+        <h4>Personalized Learning Roadmap</h4><p>A step-by-step roadmap tailored to your current skill level.</p>
+      </a>
+      <a href="#dashboard-preview" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,var(--success),#16A34A);">📈</div>
+        <h4>Skill Progress Tracking</h4><p>Track your learning progress with smart analytics and verification.</p>
+      </a>
+      <a href="#workflow" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,var(--warning),#D97706);">💼</div>
+        <h4>Industry Projects</h4><p>Build real-world projects and strengthen your portfolio.</p>
+      </a>
+      <a href="#workflow" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,var(--secondary),#A78BFA);">📝</div>
+        <h4>Mock Assessments</h4><p>Take role-based mock tests and identify your weak areas.</p>
+      </a>
+      <a href="#resume-analysis" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,var(--accent),#22D3EE);">📄</div>
+        <h4>Resume Gap Analysis</h4><p>Find missing skills in your resume and get suggestions.</p>
+      </a>
+      <a href="#placement-readiness" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,#F59E0B,#FBBF24);">🎯</div>
+        <h4>Placement Readiness Score</h4><p>A real-time score that shows how ready you are for placements.</p>
+      </a>
+      <a href="#workflow" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,#EF4444,#F87171);">🏢</div>
+        <h4>Internship Recommendations</h4><p>Get personalized internship recommendations matching your profile.</p>
+      </a>
+      <a href="#hero" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,var(--primary),#3B82F6);">👨‍🏫</div>
+        <h4>Mentor Guidance</h4><p>Connect with mentors and get expert career guidance and feedback.</p>
+      </a>
+      <a href="#ai-assistant" class="feat-card fade-in">
+        <div class="feat-ic" style="background:linear-gradient(135deg,var(--secondary),var(--accent));">🤖</div>
+        <h4>AI Career Assistant</h4><p>Your 24/7 AI assistant for doubts, guidance &amp; career advice.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: WORKFLOW -->
+<section class="flow-sec" id="workflow">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-tag">The Journey</span>
+      <h2>Your Journey With CareerBridge</h2>
+      <p>One connected path from profile to placement.</p>
+    </div>
+    <div class="flow-track fade-in">
+      <div class="flow-node"><div class="flow-dot" style="background:linear-gradient(135deg,#2563EB,#3B82F6);">1</div><div class="lbl">Profile</div></div>
+      <div class="flow-node"><div class="flow-dot" style="background:linear-gradient(135deg,#3B82F6,#2563EB);">📋</div><div class="lbl">Assessment</div></div>
+      <div class="flow-node"><div class="flow-dot" style="background:linear-gradient(135deg,var(--success),#16A34A);">🎯</div><div class="lbl">Career Match</div></div>
+      <div class="flow-node"><div class="flow-dot" style="background:linear-gradient(135deg,var(--accent),#22D3EE);">🛣️</div><div class="lbl">Roadmap</div></div>
+      <div class="flow-node"><div class="flow-dot" style="background:linear-gradient(135deg,var(--warning),#D97706);">💼</div><div class="lbl">Projects</div></div>
+      <div class="flow-node"><div class="flow-dot" style="background:linear-gradient(135deg,var(--secondary),#A78BFA);">📝</div><div class="lbl">Mock Test</div></div>
+      <div class="flow-node"><div class="flow-dot" style="background:linear-gradient(135deg,#7C3AED,#2563EB);">📄</div><div class="lbl">Resume</div></div>
+      <div class="flow-node"><div class="flow-dot" style="background:linear-gradient(135deg,#EC4899,#7C3AED);">🏆</div><div class="lbl">Placement Ready</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: DASHBOARD PREVIEW -->
+<section class="dash-sec" id="dashboard-preview">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-tag">Product Preview</span>
+      <h2>Smart Dashboard Preview</h2>
+      <p>Everything you need, visualized in one clean, live-updating dashboard.</p>
+    </div>
+    <div class="dash-mock fade-in">
+      <div class="dash-grid">
+        <div class="dm-card">
+          <h5>Placement Readiness</h5>
+          <div class="dm-ring">
+            <svg viewBox="0 0 70 70" width="64" height="64">
+              <circle cx="35" cy="35" r="29" fill="none" stroke="var(--line)" stroke-width="6"/>
+              <circle cx="35" cy="35" r="29" fill="none" stroke="url(#gA)" stroke-width="6" stroke-linecap="round" stroke-dasharray="150 182"/>
+              <defs><linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22C55E"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs>
+            </svg>
+            <div class="dm-ring-pct">82%</div>
+          </div>
+          <p style="text-align:center; font-size:11.5px;">Learning Streak: 🔥 24 days</p>
+        </div>
+        <div class="dm-card">
+          <h5>Skill Progress</h5>
+          <div class="dm-bar-row"><span>React</span><span>85%</span></div>
+          <div class="dm-bar-track"><div class="dm-bar-fill" style="width:85%; background:linear-gradient(90deg,var(--primary),var(--accent));"></div></div>
+          <div class="dm-bar-row"><span>Node.js</span><span>60%</span></div>
+          <div class="dm-bar-track"><div class="dm-bar-fill" style="width:60%; background:linear-gradient(90deg,var(--secondary),var(--primary));"></div></div>
+          <div class="dm-bar-row"><span>SQL</span><span>90%</span></div>
+          <div class="dm-bar-track"><div class="dm-bar-fill" style="width:90%; background:linear-gradient(90deg,var(--success),var(--accent));"></div></div>
+        </div>
+        <div class="dm-card">
+          <h5>Upcoming Assessment</h5>
+          <p style="font-size:13px; font-weight:700; color:var(--ink);">React Advanced Test</p>
+          <p style="font-size:11.5px; margin-bottom:14px;">Tomorrow, 10:00 AM</p>
+          <h5 style="margin-top:16px;">Recommended Project</h5>
+          <p style="font-size:13px; font-weight:700; color:var(--ink);">E-commerce Web App</p>
+          <p style="font-size:11.5px;">React, Node.js, MongoDB</p>
+        </div>
+        <div class="dm-card">
+          <h5>Recent Achievements</h5>
+          <div class="dm-achieve"><span class="ic">✓</span>React Basics Completed</div>
+          <div class="dm-achieve"><span class="ic">✓</span>Find Project Completed</div>
+          <div class="dm-achieve"><span class="ic">✓</span>SQL Mastery Badge</div>
+          <div class="dm-achieve"><span class="ic">✓</span>Assessment Score 90%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: AI ASSISTANT -->
+<section class="ai-sec" id="ai-assistant">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-tag">AI Career Assistant</span>
+      <h2>Your 24/7 Career Companion</h2>
+      <p>Ask anything about your roadmap, skills, or next steps — get instant, personalized guidance.</p>
+    </div>
+    <div class="ai-chat fade-in">
+      <div class="ai-chat-head"><div class="ai-orb-sm">✨</div><div><div style="font-weight:700; font-size:13.5px;">CareerBridge AI</div><div style="font-size:11px; color:var(--ink-faint);">Always online</div></div></div>
+      <div class="bubble user">What should I learn after React?</div>
+      <div class="bubble ai">
+        You've completed React fundamentals 🎉 Here's what I'd recommend next:
+        <ul>
+          <li>Redux Toolkit</li>
+          <li>Authentication</li>
+          <li>API Integration</li>
+          <li>Performance Optimization</li>
+        </ul>
+        Estimated completion: <strong>3 weeks</strong>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: RESUME ANALYSIS -->
+<section class="resume-sec" id="resume-analysis">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-tag">Resume Intelligence</span>
+      <h2>Resume Gap Analysis</h2>
+      <p>Upload your resume and instantly see what's working — and what's missing.</p>
+    </div>
+    <div class="resume-grid fade-in">
+      <div class="resume-doc">
+        <div class="rname">John Doe</div>
+        <div class="rrole">Full Stack Developer</div>
+        <div class="resume-line" style="width:90%;"></div>
+        <div class="resume-line" style="width:75%;"></div>
+        <div class="resume-line" style="width:95%;"></div>
+        <div class="resume-line" style="width:60%;"></div>
+        <div class="resume-line" style="width:80%;"></div>
+        <div class="resume-line" style="width:70%;"></div>
+        <div class="resume-line" style="width:50%;"></div>
+      </div>
+      <div class="resume-analysis">
+        <div class="ats-row">
+          <div><div style="font-size:13px; font-weight:700; color:var(--ink-soft);">ATS Score</div></div>
+          <div class="ats-score">
+            <div class="dm-ring" style="width:56px; height:56px;">
+              <svg viewBox="0 0 70 70" width="56" height="56">
+                <circle cx="35" cy="35" r="29" fill="none" stroke="var(--line)" stroke-width="6"/>
+                <circle cx="35" cy="35" r="29" fill="none" stroke="url(#gB)" stroke-width="6" stroke-linecap="round" stroke-dasharray="150 182"/>
+                <defs><linearGradient id="gB" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient></defs>
+              </svg>
+              <div class="dm-ring-pct">82</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12.5px; font-weight:700; margin-bottom:8px;">✓ Good Skills</div>
+          <div class="skill-tag-row"><span class="skill-tag good">React</span><span class="skill-tag good">JavaScript</span><span class="skill-tag good">HTML</span><span class="skill-tag good">CSS</span></div>
+        </div>
+        <div>
+          <div style="font-size:12.5px; font-weight:700; margin-bottom:8px; color:var(--danger);">✕ Missing Skills</div>
+          <div class="skill-tag-row"><span class="skill-tag miss">TypeScript</span><span class="skill-tag miss">Docker</span><span class="skill-tag miss">AWS</span><span class="skill-tag miss">CI/CD</span></div>
+        </div>
+        <div>
+          <div style="font-size:12.5px; font-weight:700; margin-bottom:8px;">Suggestions</div>
+          <div class="sugg-item"><span class="ic">✓</span>Add more backend projects</div>
+          <div class="sugg-item"><span class="ic">✓</span>Include cloud technologies</div>
+          <div class="sugg-item"><span class="ic">✓</span>Improve achievement metrics</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8: PLACEMENT READINESS -->
+<section class="placement-sec" id="placement-readiness">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-tag">Placement Readiness</span>
+      <h2>Know Exactly How Ready You Are</h2>
+      <p>A single score built from everything you've done — roadmap, projects, tests, resume &amp; profile.</p>
+    </div>
+    <div class="placement-wrap fade-in">
+      <div class="big-gauge">
+        <svg viewBox="0 0 190 190" width="190" height="190">
+          <circle cx="95" cy="95" r="80" fill="none" stroke="var(--line)" stroke-width="14"/>
+          <circle cx="95" cy="95" r="80" fill="none" stroke="url(#gC)" stroke-width="14" stroke-linecap="round" stroke-dasharray="412 503"/>
+          <defs><linearGradient id="gC" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22C55E"/><stop offset="55%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient></defs>
+        </svg>
+        <div class="big-gauge-pct"><span class="n">82%</span><span class="l">Ready</span></div>
+      </div>
+      <div class="breakdown-list">
+        <div class="bd-row"><span class="k">Roadmap</span><div class="track"><div class="fill" style="width:85%; background:linear-gradient(90deg,var(--primary),var(--accent));"></div></div><span class="pct">85%</span></div>
+        <div class="bd-row"><span class="k">Projects</span><div class="track"><div class="fill" style="width:75%; background:linear-gradient(90deg,var(--secondary),#A78BFA);"></div></div><span class="pct">75%</span></div>
+        <div class="bd-row"><span class="k">Mock Tests</span><div class="track"><div class="fill" style="width:80%; background:linear-gradient(90deg,var(--warning),#FBBF24);"></div></div><span class="pct">80%</span></div>
+        <div class="bd-row"><span class="k">Resume</span><div class="track"><div class="fill" style="width:85%; background:linear-gradient(90deg,var(--accent),#22D3EE);"></div></div><span class="pct">85%</span></div>
+        <div class="bd-row"><span class="k">Profile</span><div class="track"><div class="fill" style="width:90%; background:linear-gradient(90deg,var(--success),var(--accent));"></div></div><span class="pct">90%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 9: JOURNEY TIMELINE -->
+<section class="journey-sec" id="journey">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <span class="sec-tag">Student Journey</span>
+      <h2>From Sign-Up to Success</h2>
+      <p>A clear, guided path — every student follows the same proven journey.</p>
+    </div>
+    <div class="journey-track fade-in">
+      <div class="journey-node"><div class="journey-dot">1</div><div class="lbl">Registration</div></div>
+      <div class="journey-node"><div class="journey-dot">2</div><div class="lbl">Profile</div></div>
+      <div class="journey-node"><div class="journey-dot">3</div><div class="lbl">Roadmap</div></div>
+      <div class="journey-node"><div class="journey-dot">4</div><div class="lbl">Projects</div></div>
+      <div class="journey-node"><div class="journey-dot">5</div><div class="lbl">Assessment</div></div>
+      <div class="journey-node"><div class="journey-dot">6</div><div class="lbl">Placement</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 10: STATS -->
+<section class="stats-sec" id="stats">
+  <div class="container">
+    <div class="stats-grid fade-in">
+      <div class="stat-box"><div class="n">10,000+</div><div class="l">Students</div></div>
+      <div class="stat-box"><div class="n">250+</div><div class="l">Roadmaps</div></div>
+      <div class="stat-box"><div class="n">95%</div><div class="l">Completion Rate</div></div>
+      <div class="stat-box"><div class="n">500+</div><div class="l">Projects</div></div>
+      <div class="stat-box"><div class="n">100+</div><div class="l">Mentors</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 11: FINAL CTA -->
+<section class="cta-sec" id="final-cta">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Your Dream Career Starts Here.</h2>
+      <p>Join thousands of students who are already building their future with CareerBridge.</p>
+      <div class="ctas">
+        <a href="#hero" class="btn btn-primary" style="box-shadow:0 8px 24px -8px rgba(0,0,0,0.4);">Start Learning Now</a>
+        <a href="#core-features" class="btn btn-outline">Explore Career Paths</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo"><span class="logo-mark"></span>CareerBridge</a>
+        <p>Your AI-powered companion for career guidance and placement success.</p>
+        <div class="footer-social">
+          <a href="#" class="icon-btn">🐙</a><a href="#" class="icon-btn">💼</a><a href="#" class="icon-btn">🐦</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="#core-features">Features</a>
+        <a href="#hero">Career Paths</a>
+        <a href="#workflow">Projects</a>
+        <a href="#dashboard-preview">Assessments</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#">About Us</a><a href="#">Careers</a><a href="#">Blog</a><a href="#">Contact Us</a>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <a href="#">Help Center</a><a href="#">Roadmap</a><a href="#">Guides</a><a href="#">API</a>
+      </div>
+      <div class="footer-col">
+        <h5>Newsletter</h5>
+        <p style="font-size:12.5px; margin-bottom:4px;">Get the latest updates and career tips in your inbox.</p>
+        <div class="newsletter-input"><input type="email" placeholder="Enter your email"><button>→</button></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CareerBridge. All rights reserved.</span>
+      <span>Privacy Policy · Terms of Service</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* header scroll state */
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', ()=>{
+  header.classList.toggle('scrolled', window.scrollY > 20);
+});
+
+/* theme toggle */
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.onclick = ()=>{
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  themeToggle.textContent = isDark ? '🌙' : '☀️';
+};
+
+/* nav active-link highlighting on scroll */
+const navLinks = document.querySelectorAll('.main-nav a');
+const navSections = Array.from(navLinks).map(l => document.querySelector(l.getAttribute('href')));
+function updateActiveNav(){
+  let idx = 0;
+  navSections.forEach((sec,i)=>{
+    if(sec && sec.getBoundingClientRect().top < 120) idx = i;
+  });
+  navLinks.forEach((l,i)=> l.classList.toggle('active', i===idx));
+}
+window.addEventListener('scroll', updateActiveNav);
+updateActiveNav();
+
+/* fade-in on scroll */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); observer.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

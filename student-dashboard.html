@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — CareerBridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --primary:#2563EB;
+  --secondary:#7C3AED;
+  --accent:#06B6D4;
+  --success:#22C55E;
+  --warning:#F59E0B;
+  --danger:#EF4444;
+  --ink:#0F172A;
+  --ink-soft:#475569;
+  --ink-faint:#94A3B8;
+  --line:#E2E8F0;
+  --bg:#FBFCFE;
+  --surface:#FFFFFF;
+  --card-bg: rgba(255,255,255,0.7);
+  --card-bg-solid: rgba(255,255,255,0.92);
+  --sidebar-bg: rgba(255,255,255,0.85);
+  --radius:18px;
+  --shadow-soft: 0 10px 40px -12px rgba(37,99,235,0.18);
+  --shadow-lift: 0 24px 60px -20px rgba(37,99,235,0.32);
+}
+[data-theme="dark"]{
+  --ink:#F1F5F9;
+  --ink-soft:#94A3B8;
+  --ink-faint:#64748B;
+  --line:#1E293B;
+  --bg:#0B1120;
+  --surface:#111827;
+  --card-bg: rgba(255,255,255,0.05);
+  --card-bg-solid: rgba(17,24,39,0.92);
+  --sidebar-bg: rgba(11,17,32,0.9);
+  --shadow-soft: 0 10px 40px -12px rgba(0,0,0,0.5);
+  --shadow-lift: 0 24px 60px -20px rgba(0,0,0,0.6);
+}
+
+*{box-sizing:border-box;}
+body{margin:0; font-family:'Inter',sans-serif; color:var(--ink); background:var(--bg); -webkit-font-smoothing:antialiased; transition:background .35s ease, color .35s ease;}
+h1,h2,h3,h4,.display{font-family:'Lexend',sans-serif; letter-spacing:-0.02em; margin:0;}
+p{margin:0; color:var(--ink-soft); line-height:1.6;}
+a{text-decoration:none; color:inherit;}
+button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+ul{list-style:none; margin:0; padding:0;}
+::-webkit-scrollbar{width:8px; height:8px;}
+::-webkit-scrollbar-thumb{background:var(--line); border-radius:8px;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+}
+
+/* ---------- background atmosphere ---------- */
+.bg-field{position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none;}
+.blob{position:absolute; border-radius:50%; filter:blur(90px); opacity:0.28;}
+[data-theme="dark"] .blob{opacity:0.4;}
+.blob1{width:560px; height:560px; background:radial-gradient(circle, var(--primary), transparent 70%); top:-220px; left:220px;}
+.blob2{width:480px; height:480px; background:radial-gradient(circle, var(--secondary), transparent 70%); top:380px; right:-200px; opacity:0.2;}
+.blob3{width:420px; height:420px; background:radial-gradient(circle, var(--accent), transparent 70%); bottom:-160px; left:40%; opacity:0.18;}
+.grid-overlay{position:absolute; inset:0; background-image:linear-gradient(to right, rgba(37,99,235,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(37,99,235,0.04) 1px, transparent 1px); background-size:60px 60px; mask-image:radial-gradient(ellipse 70% 50% at 60% 0%, black 30%, transparent 85%);}
+
+/* ---------- app shell ---------- */
+.app{display:flex; min-height:100vh;}
+
+/* ---------- sidebar ---------- */
+.sidebar{
+  width:248px; flex-shrink:0; background:var(--sidebar-bg); backdrop-filter:blur(18px);
+  border-right:1px solid var(--line); display:flex; flex-direction:column; padding:22px 16px;
+  position:sticky; top:0; height:100vh; overflow-y:auto; z-index:50; transition:transform .3s ease, background .35s ease, border-color .35s ease;
+}
+.sb-logo{display:flex; align-items:center; gap:10px; padding:4px 8px 22px;}
+.logo-mark{width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--secondary)); position:relative; flex-shrink:0;}
+.logo-mark::after{content:''; position:absolute; inset:8px; border:2px solid white; border-radius:4px; border-right:none; border-bottom:none; transform:rotate(45deg);}
+.sb-logo .name{font-family:'Lexend',sans-serif; font-weight:700; font-size:16.5px; line-height:1.2;}
+.sb-logo .tag{font-size:11px; color:var(--ink-faint); font-weight:500;}
+
+.sb-nav{display:flex; flex-direction:column; gap:3px; margin-top:4px;}
+.sb-link{
+  display:flex; align-items:center; gap:12px; padding:11px 13px; border-radius:12px;
+  font-size:13.8px; font-weight:600; color:var(--ink-soft); transition:all .2s ease; position:relative;
+}
+.sb-link .ic{width:18px; text-align:center; font-size:15px; flex-shrink:0;}
+.sb-link:hover{background:rgba(37,99,235,0.07); color:var(--ink);}
+.sb-link.active{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; box-shadow:0 8px 20px -8px rgba(37,99,235,0.5);}
+.sb-badge{margin-left:auto; font-size:9.5px; font-weight:700; padding:3px 7px; border-radius:999px; background:rgba(245,158,11,0.14); color:var(--warning); white-space:nowrap;}
+.sb-link.active .sb-badge{background:rgba(255,255,255,0.22); color:#fff;}
+
+.sb-promo{
+  margin-top:18px; border-radius:18px; padding:20px 16px; text-align:center; position:relative; overflow:hidden;
+  background:linear-gradient(160deg, rgba(37,99,235,0.12), rgba(124,58,237,0.12)); border:1px solid rgba(124,58,237,0.2);
+}
+.sb-promo .close{position:absolute; top:8px; right:10px; font-size:12px; color:var(--ink-faint); cursor:pointer;}
+.sb-promo .ic-circle{width:54px; height:54px; border-radius:16px; margin:0 auto 12px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 10px 24px -8px rgba(37,99,235,0.5);}
+.sb-promo h5{font-size:13.5px; font-weight:700; margin-bottom:6px;}
+.sb-promo p{font-size:11.5px; margin-bottom:14px;}
+.sb-promo .btn{width:100%; padding:9px; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; font-size:12.5px; font-weight:700;}
+
+.sb-help{margin-top:auto; padding-top:16px; display:flex; align-items:center; gap:10px; border-top:1px solid var(--line); margin-top:16px; padding:16px 6px 4px;}
+.sb-help .ic-circle{width:36px; height:36px; border-radius:50%; background:rgba(37,99,235,0.1); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;}
+.sb-help p{font-size:11.5px; font-weight:600; color:var(--ink-soft); line-height:1.4;}
+
+/* ---------- main column ---------- */
+.main-col{flex:1; min-width:0; display:flex; flex-direction:column;}
+
+/* topbar */
+.topbar{
+  position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between; gap:20px;
+  padding:16px 28px; background:rgba(251,252,254,0.78); backdrop-filter:blur(16px); border-bottom:1px solid var(--line);
+  transition:background .35s ease, border-color .35s ease;
+}
+[data-theme="dark"] .topbar{background:rgba(11,17,32,0.78);}
+.search-box{display:flex; align-items:center; gap:10px; flex:1; max-width:420px; padding:10px 14px; border-radius:12px; background:rgba(148,163,184,0.1); border:1px solid var(--line); color:var(--ink-faint);}
+.search-box input{border:none; background:none; outline:none; flex:1; font-size:13.5px; color:var(--ink); font-family:inherit;}
+.search-box input::placeholder{color:var(--ink-faint);}
+.kbd{font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:6px; background:var(--line); color:var(--ink-soft);}
+.topbar-right{display:flex; align-items:center; gap:12px; flex-shrink:0;}
+.icon-btn{width:38px; height:38px; border-radius:10px; background:rgba(37,99,235,0.07); display:flex; align-items:center; justify-content:center; transition:all .2s ease; position:relative; font-size:15px;}
+.icon-btn:hover{background:rgba(37,99,235,0.14); transform:translateY(-1px);}
+.icon-btn .badge{position:absolute; top:-3px; right:-3px; min-width:16px; height:16px; padding:0 3px; border-radius:999px; background:var(--danger); color:#fff; font-size:9.5px; font-weight:800; display:flex; align-items:center; justify-content:center; border:2px solid var(--bg);}
+.profile-chip{display:flex; align-items:center; gap:10px; padding:6px 10px 6px 6px; border-radius:12px; transition:background .2s ease;}
+.profile-chip:hover{background:rgba(37,99,235,0.06);}
+.avatar{width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--accent)); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:13.5px; flex-shrink:0;}
+.profile-chip .pname{font-size:13px; font-weight:700;}
+.profile-chip .prole{font-size:11px; color:var(--ink-faint);}
+.chev{font-size:10px; color:var(--ink-faint); transition:transform .2s ease;}
+
+.content{padding:26px 28px 60px;}
+.content-grid{display:grid; grid-template-columns:1fr 320px; gap:22px; align-items:start;}
+
+/* ---------- hero ---------- */
+.hero-card{
+  position:relative; overflow:hidden; border-radius:22px; padding:34px 36px; margin-bottom:22px;
+  background:linear-gradient(120deg, #0F172A 0%, #1E3A8A 55%, #4C1D95 100%); color:#fff; min-height:170px;
+  display:flex; align-items:center; justify-content:space-between; gap:24px;
+}
+[data-theme="dark"] .hero-card{background:linear-gradient(120deg, #060A14 0%, #14204A 55%, #2E1065 100%);}
+.hero-card::before{content:''; position:absolute; inset:0; background-image:radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size:24px 24px;}
+.hero-text{position:relative; z-index:1; max-width:560px;}
+.hero-text h1{font-size:27px; font-weight:800; margin-bottom:8px;}
+.hero-text p{color:rgba(255,255,255,0.78); font-size:14.5px;}
+.hero-visual{position:relative; z-index:1; width:240px; height:140px; flex-shrink:0; display:flex; align-items:flex-end; justify-content:center;}
+.hero-visual svg{width:100%; height:100%;}
+
+/* ---------- stat cards ---------- */
+.stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:22px;}
+.glass-card{
+  border-radius:20px; padding:22px; background:var(--card-bg); backdrop-filter:blur(16px);
+  border:1px solid var(--line); box-shadow:var(--shadow-soft); transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.glass-card:hover{transform:translateY(-3px); box-shadow:var(--shadow-lift);}
+.stat-head{display:flex; align-items:center; justify-content:between; margin-bottom:14px;}
+.stat-title{font-size:12.5px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.03em;}
+.pill{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:999px; margin-bottom:12px;}
+.pill-success{background:rgba(34,197,94,0.12); color:var(--success);}
+.pill-warn{background:rgba(245,158,11,0.12); color:var(--warning);}
+.stat-card .big{font-size:18px; font-weight:800; font-family:'Lexend',sans-serif; margin-bottom:4px;}
+.stat-card .sub{font-size:12px; color:var(--ink-faint); margin-bottom:16px;}
+.stat-icon-row{display:flex; align-items:center; justify-content:center; margin:6px 0 14px;}
+.target-ic{width:62px; height:62px;}
+
+/* circular ring generic */
+.ring{position:relative; width:78px; height:78px; margin:0 auto 12px;}
+.ring svg{transform:rotate(-90deg);}
+.ring-bg{fill:none; stroke:var(--line); stroke-width:7;}
+.ring-fg{fill:none; stroke-width:7; stroke-linecap:round;}
+.ring-pct{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.ring-pct .n{font-family:'Lexend',sans-serif; font-weight:800; font-size:16px;}
+.ring-pct .l{font-size:9px; color:var(--ink-faint); font-weight:600;}
+
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:10px 16px; border-radius:11px; font-weight:700; font-size:13px; transition:all .2s ease; width:100%;}
+.btn-primary{color:#fff; background:linear-gradient(135deg,var(--primary),var(--secondary)); box-shadow:0 8px 20px -8px rgba(37,99,235,0.5);}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 26px -8px rgba(37,99,235,0.55);}
+.btn-soft{background:rgba(37,99,235,0.08); color:var(--primary);}
+.btn-soft:hover{background:rgba(37,99,235,0.15);}
+.btn-outline{background:transparent; border:1.5px solid var(--line); color:var(--ink);}
+.btn-outline:hover{border-color:var(--primary); color:var(--primary);}
+
+/* ---------- two col body ---------- */
+.left-stack, .right-stack{display:flex; flex-direction:column; gap:22px;}
+.section-card{border-radius:20px; padding:24px; background:var(--card-bg); backdrop-filter:blur(16px); border:1px solid var(--line); box-shadow:var(--shadow-soft);}
+.section-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;}
+.section-head h3{font-size:16.5px; font-weight:700;}
+.link-sm{font-size:12.5px; font-weight:700; color:var(--primary); display:flex; align-items:center; gap:4px;}
+.link-sm:hover{text-decoration:underline;}
+
+/* roadmap timeline */
+.timeline{display:flex; flex-direction:column;}
+.tl-row{display:flex; gap:14px; position:relative; padding-bottom:18px;}
+.tl-row:last-child{padding-bottom:0;}
+.tl-marker-wrap{display:flex; flex-direction:column; align-items:center; flex-shrink:0;}
+.tl-marker{width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; z-index:1;}
+.tl-marker.done{background:var(--success); color:#fff;}
+.tl-marker.active{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; box-shadow:0 0 0 5px rgba(37,99,235,0.16);}
+.tl-marker.locked{background:rgba(148,163,184,0.16); color:var(--ink-faint);}
+.tl-line{width:2px; flex:1; background:var(--line); margin-top:4px;}
+.tl-line.done{background:var(--success);}
+.tl-content{flex:1; display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:2px;}
+.tl-content.locked{opacity:0.5;}
+.tl-name{font-size:14px; font-weight:700;}
+.tl-desc{font-size:12px; color:var(--ink-faint); margin-top:2px;}
+.tl-status{font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:999px; white-space:nowrap; flex-shrink:0;}
+.tl-status.done{background:rgba(34,197,94,0.12); color:var(--success);}
+.tl-status.active{background:rgba(37,99,235,0.12); color:var(--primary);}
+.tl-status.locked{background:rgba(148,163,184,0.12); color:var(--ink-faint);}
+
+/* next up card */
+.nextup-card{border-radius:20px; padding:22px; background:linear-gradient(165deg, rgba(124,58,237,0.08), rgba(37,99,235,0.06)); border:1px solid rgba(124,58,237,0.18); display:flex; flex-direction:column; gap:14px;}
+.nextup-top{display:flex; align-items:center; gap:14px;}
+.nextup-icon{width:46px; height:46px; border-radius:13px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; flex-shrink:0;}
+.nextup-meta-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:12px 0; border-top:1px dashed var(--line); border-bottom:1px dashed var(--line);}
+.nextup-meta-grid .l{font-size:11px; color:var(--ink-faint); font-weight:600; margin-bottom:3px;}
+.nextup-meta-grid .v{font-size:13px; font-weight:700; display:flex; align-items:center; gap:5px;}
+
+/* placement readiness */
+.gauge-card{display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px;}
+.gauge-wrap{width:110px; height:110px; position:relative; margin:6px 0 10px;}
+.preview-tag{font-size:10px; font-weight:700; padding:4px 10px; border-radius:999px; background:rgba(245,158,11,0.12); color:var(--warning);}
+.gauge-note{font-size:11.5px; color:var(--ink-faint); line-height:1.5; margin-top:8px;}
+
+/* upcoming modules */
+.upcoming-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+.upc-card{border-radius:14px; padding:16px 10px; text-align:center; background:rgba(148,163,184,0.06); border:1px solid var(--line); transition:all .2s ease; cursor:not-allowed; position:relative;}
+.upc-card:hover{transform:translateY(-3px); border-color:rgba(124,58,237,0.3);}
+.upc-card .ic{width:38px; height:38px; border-radius:11px; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:17px; color:#fff;}
+.upc-card .nm{font-size:12.5px; font-weight:700; margin-bottom:5px;}
+.upc-card .bd{font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.12); color:var(--warning); display:inline-block;}
+
+/* recent activity */
+.activity-row{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line);}
+.activity-row:last-child{border-bottom:none; padding-bottom:0;}
+.act-ic{width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; flex-shrink:0;}
+.act-name{font-size:13.5px; font-weight:600; flex:1;}
+.act-time{font-size:11.5px; color:var(--ink-faint); flex-shrink:0;}
+
+/* career summary */
+.summary-list{display:flex; flex-direction:column; gap:13px; margin-bottom:16px;}
+.summary-row{display:flex; align-items:center; justify-content:space-between; font-size:13px;}
+.summary-row .k{display:flex; align-items:center; gap:9px; color:var(--ink-soft); font-weight:600;}
+.summary-row .k .ic{width:26px; height:26px; border-radius:8px; background:rgba(37,99,235,0.08); display:flex; align-items:center; justify-content:center; font-size:12px;}
+.summary-row .v{font-weight:700;}
+
+/* quick actions */
+.qa-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+.qa-btn{border-radius:16px; padding:20px 14px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; color:#fff; font-size:13px; font-weight:700; transition:transform .2s ease, box-shadow .25s ease;}
+.qa-btn:hover{transform:translateY(-3px);}
+.qa-btn .ic{width:38px; height:38px; border-radius:11px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:17px;}
+.qa1{background:linear-gradient(135deg,var(--primary),var(--secondary)); box-shadow:0 10px 24px -8px rgba(37,99,235,0.45);}
+.qa2{background:linear-gradient(135deg,#16A34A,var(--success)); box-shadow:0 10px 24px -8px rgba(34,197,94,0.45);}
+.qa3{background:linear-gradient(135deg,#D97706,var(--warning)); box-shadow:0 10px 24px -8px rgba(245,158,11,0.45);}
+.qa4{background:linear-gradient(135deg,var(--accent),#0EA5E9); box-shadow:0 10px 24px -8px rgba(6,182,212,0.45);}
+
+/* major project showcase */
+.showcase-band{
+  border-radius:22px; padding:26px 30px; margin-top:22px; position:relative; overflow:hidden;
+  background:linear-gradient(120deg, #0F172A, #312E81 55%, #4C1D95); color:#fff;
+}
+[data-theme="dark"] .showcase-band{background:linear-gradient(120deg, #060A14, #1E1B4B 55%, #2E1065);}
+.showcase-band::before{content:''; position:absolute; inset:0; background-image:radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size:22px 22px;}
+.showcase-top{position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px;}
+.showcase-title{display:flex; align-items:center; gap:10px; font-size:18px; font-weight:800;}
+.showcase-sub{font-size:13px; color:rgba(255,255,255,0.65); font-weight:500;}
+.showcase-link{font-size:12.5px; font-weight:700; color:#C4B5FD; display:flex; align-items:center; gap:4px;}
+.showcase-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(7,1fr); gap:12px;}
+.sc-card{background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:14px 12px; transition:all .2s ease;}
+.sc-card:hover{background:rgba(255,255,255,0.1); transform:translateY(-3px);}
+.sc-card .ic{width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:15px; margin-bottom:10px;}
+.sc-card .nm{font-size:12px; font-weight:700; margin-bottom:5px;}
+.sc-card .bd{font-size:9.5px; font-weight:700; color:#C4B5FD;}
+
+/* footer */
+.dash-footer{display:flex; align-items:center; justify-content:space-between; padding:20px 28px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-faint); flex-wrap:wrap; gap:10px;}
+.dash-footer .links{display:flex; gap:18px;}
+.dash-footer a:hover{color:var(--primary);}
+
+.mobile-toggle{display:none; width:38px; height:38px; align-items:center; justify-content:center; border-radius:10px; background:rgba(37,99,235,0.08); font-size:16px;}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .content-grid{grid-template-columns:1fr;}
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+  .showcase-grid{grid-template-columns:repeat(4,1fr);}
+  .upcoming-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:900px){
+  .sidebar{position:fixed; left:0; transform:translateX(-100%); box-shadow:0 0 0 100vmax rgba(0,0,0,0); z-index:300;}
+  .sidebar.open{transform:translateX(0); box-shadow:24px 0 60px -20px rgba(0,0,0,0.3);}
+  .mobile-toggle{display:flex;}
+  .search-box{display:none;}
+  .hero-visual{display:none;}
+  .qa-grid{grid-template-columns:repeat(2,1fr);}
+  .showcase-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:640px){
+  .content{padding:18px 16px 50px;}
+  .stat-grid{grid-template-columns:1fr;}
+  .hero-card{padding:24px 22px;}
+  .hero-text h1{font-size:21px;}
+  .showcase-grid{grid-template-columns:repeat(2,1fr);}
+  .topbar{padding:14px 16px;}
+  .profile-chip .pname, .profile-chip .prole{display:none;}
+  .dash-footer{flex-direction:column; align-items:flex-start;}
+}
+
+.fade-in{animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) both;}
+@keyframes fadeUp{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
+</style>
+</head>
+<body data-theme="light">
+
+<div class="bg-field"><div class="grid-overlay"></div><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <span class="logo-mark"></span>
+      <div>
+        <div class="name">CareerBridge</div>
+        <div class="tag">Your Bridge to Success</div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <a class="sb-link active" href="#"><span class="ic">🏠</span>Dashboard</a>
+      <a class="sb-link" href="#"><span class="ic">📋</span>Career Assessment</a>
+      <a class="sb-link" href="#"><span class="ic">🎯</span>Career Recommendation</a>
+      <a class="sb-link" href="#"><span class="ic">🛣️</span>Learning Roadmap</a>
+      <a class="sb-link" href="#"><span class="ic">🧠</span>Skills</a>
+      <a class="sb-link" href="#"><span class="ic">💼</span>Projects<span class="sb-badge">Coming Soon</span></a>
+      <a class="sb-link" href="#"><span class="ic">📝</span>Assessments<span class="sb-badge">Coming Soon</span></a>
+      <a class="sb-link" href="#"><span class="ic">📄</span>Resume Builder<span class="sb-badge">Coming Soon</span></a>
+      <a class="sb-link" href="#"><span class="ic">🎯</span>Opportunities<span class="sb-badge">Coming Soon</span></a>
+      <a class="sb-link" href="#"><span class="ic">👨‍🏫</span>Mentor Connect<span class="sb-badge">Coming Soon</span></a>
+      <a class="sb-link" href="#"><span class="ic">👤</span>Profile</a>
+      <a class="sb-link" href="#"><span class="ic">⚙️</span>Settings</a>
+    </nav>
+
+    <div class="sb-promo">
+      <span class="close">✕</span>
+      <div class="ic-circle">🎓</div>
+      <h5>Upgrade to Pro</h5>
+      <p>Unlock advanced learning tools, mentorship, and placement support.</p>
+      <button class="btn-promo btn" style="background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff;">Upgrade Now</button>
+    </div>
+
+    <div class="sb-help">
+      <div class="ic-circle">🎧</div>
+      <p>Need Help? We're here to help you in your career journey.</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-col">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <button class="mobile-toggle" id="mobileToggle">☰</button>
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search anything...">
+        <span class="kbd">⌘K</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="themeToggle">🌙</button>
+        <button class="icon-btn">🔔<span class="badge">3</span></button>
+        <div class="profile-chip">
+          <div class="avatar">AK</div>
+          <div>
+            <div class="pname">Hi, Akash 👋</div>
+            <div class="prole">Student</div>
+          </div>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- HERO -->
+      <div class="hero-card fade-in">
+        <div class="hero-text">
+          <h1>Welcome back, Akash 👋</h1>
+          <p>Keep learning, keep growing. You're one step closer to your dream career — continue your journey toward becoming a <strong style="color:#fff;">.NET Full Stack Developer</strong>.</p>
+        </div>
+        <div class="hero-visual">
+          <svg viewBox="0 0 240 140">
+            <defs>
+              <linearGradient id="cityGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#06B6D4"/>
+              </linearGradient>
+            </defs>
+            <rect x="150" y="40" width="18" height="100" fill="url(#cityGrad)" opacity="0.5"/>
+            <rect x="172" y="60" width="14" height="80" fill="url(#cityGrad)" opacity="0.4"/>
+            <rect x="190" y="25" width="20" height="115" fill="url(#cityGrad)" opacity="0.6"/>
+            <rect x="214" y="50" width="16" height="90" fill="url(#cityGrad)" opacity="0.45"/>
+            <path d="M0 140 L120 95 L240 140 Z" fill="rgba(124,58,237,0.18)"/>
+            <line x1="0" y1="140" x2="120" y2="95" stroke="#A78BFA" stroke-width="2" opacity="0.7"/>
+            <line x1="240" y1="140" x2="120" y2="95" stroke="#A78BFA" stroke-width="2" opacity="0.7"/>
+            <circle cx="120" cy="95" r="5" fill="#fff"><animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/></circle>
+            <circle cx="80" cy="118" r="11" fill="#312E81"/>
+            <circle cx="80" cy="106" r="7" fill="#FBCFE8"/>
+            <rect x="73" y="111" width="14" height="16" rx="5" fill="#7C3AED"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <!-- LEFT -->
+        <div class="left-stack">
+
+          <!-- STAT CARDS -->
+          <div class="stat-grid">
+            <div class="glass-card stat-card fade-in">
+              <div class="stat-title">Recommended Career</div>
+              <span class="pill pill-success">🏆 Best Match</span>
+              <div class="big">.NET Full Stack Developer</div>
+              <div class="sub">High Demand · Great Salary · Future Proof</div>
+              <button class="btn btn-primary">View Career Details</button>
+            </div>
+
+            <div class="glass-card stat-card fade-in">
+              <div class="stat-title">Roadmap Progress</div>
+              <div class="ring">
+                <svg viewBox="0 0 80 80" width="78" height="78">
+                  <circle class="ring-bg" cx="40" cy="40" r="33"/>
+                  <circle class="ring-fg" cx="40" cy="40" r="33" stroke="url(#gradBlue)" stroke-dasharray="68 207"/>
+                  <defs><linearGradient id="gradBlue" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs>
+                </svg>
+                <div class="ring-pct"><span class="n">32%</span><span class="l">Completed</span></div>
+              </div>
+              <button class="btn btn-soft">View Roadmap</button>
+            </div>
+
+            <div class="glass-card stat-card fade-in">
+              <div class="stat-title">Current Learning</div>
+              <div style="display:flex; align-items:center; gap:10px; margin:8px 0 14px;">
+                <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--secondary),var(--primary));display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0;">📘</div>
+                <div>
+                  <div style="font-size:13.5px;font-weight:700;">Object-Oriented Programming</div>
+                  <div style="font-size:11.5px;color:var(--ink-faint);">Estimated time: 2h 30m</div>
+                </div>
+              </div>
+              <button class="btn btn-primary">Continue Learning</button>
+            </div>
+
+            <div class="glass-card stat-card fade-in">
+              <div class="stat-title">Profile Completion</div>
+              <div class="ring">
+                <svg viewBox="0 0 80 80" width="78" height="78">
+                  <circle class="ring-bg" cx="40" cy="40" r="33"/>
+                  <circle class="ring-fg" cx="40" cy="40" r="33" stroke="url(#gradGreen)" stroke-dasharray="190 207"/>
+                  <defs><linearGradient id="gradGreen" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22C55E"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs>
+                </svg>
+                <div class="ring-pct"><span class="n">92%</span><span class="l">Completed</span></div>
+              </div>
+              <button class="btn btn-outline">Complete Profile</button>
+            </div>
+          </div>
+
+          <!-- ROADMAP TIMELINE -->
+          <div class="section-card fade-in">
+            <div class="section-head">
+              <h3>Your Learning Roadmap</h3>
+              <a class="link-sm" href="#">View Full Roadmap →</a>
+            </div>
+            <div class="timeline">
+              <div class="tl-row">
+                <div class="tl-marker-wrap"><div class="tl-marker done">✓</div><div class="tl-line done"></div></div>
+                <div class="tl-content"><div><div class="tl-name">Programming Fundamentals</div><div class="tl-desc">Basics of programming, variables, loops, functions</div></div><span class="tl-status done">Completed</span></div>
+              </div>
+              <div class="tl-row">
+                <div class="tl-marker-wrap"><div class="tl-marker done">✓</div><div class="tl-line done"></div></div>
+                <div class="tl-content"><div><div class="tl-name">C# Programming</div><div class="tl-desc">Learn C# syntax, OOP concepts, collections</div></div><span class="tl-status done">Completed</span></div>
+              </div>
+              <div class="tl-row">
+                <div class="tl-marker-wrap"><div class="tl-marker active">3</div><div class="tl-line"></div></div>
+                <div class="tl-content"><div><div class="tl-name">Object-Oriented Programming</div><div class="tl-desc">Classes, objects, inheritance, polymorphism</div></div><span class="tl-status active">In Progress</span></div>
+              </div>
+              <div class="tl-row">
+                <div class="tl-marker-wrap"><div class="tl-marker locked">4</div><div class="tl-line"></div></div>
+                <div class="tl-content locked"><div><div class="tl-name">Collections &amp; LINQ</div><div class="tl-desc">List, Dictionary, LINQ queries</div></div><span class="tl-status locked">Locked</span></div>
+              </div>
+              <div class="tl-row">
+                <div class="tl-marker-wrap"><div class="tl-marker locked">5</div></div>
+                <div class="tl-content locked"><div><div class="tl-name">SQL Server</div><div class="tl-desc">T-SQL, Joins, Stored Procedures</div></div><span class="tl-status locked">Locked</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT ACTIVITY + CAREER SUMMARY -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px;">
+            <div class="section-card fade-in">
+              <div class="section-head"><h3>Recent Activity</h3><a class="link-sm" href="#">View All →</a></div>
+              <div class="activity-list">
+                <div class="activity-row"><div class="act-ic" style="background:var(--success);">✓</div><div class="act-name">Profile Completed</div><div class="act-time">2 days ago</div></div>
+                <div class="activity-row"><div class="act-ic" style="background:var(--primary);">📋</div><div class="act-name">Assessment Submitted</div><div class="act-time">2 days ago</div></div>
+                <div class="activity-row"><div class="act-ic" style="background:var(--secondary);">🎯</div><div class="act-name">Career Recommended</div><div class="act-time">2 days ago</div></div>
+                <div class="activity-row"><div class="act-ic" style="background:var(--warning);">🛣️</div><div class="act-name">Roadmap Generated</div><div class="act-time">2 days ago</div></div>
+                <div class="activity-row"><div class="act-ic" style="background:var(--accent);">📘</div><div class="act-name">Started Learning C#</div><div class="act-time">1 day ago</div></div>
+              </div>
+            </div>
+
+            <div class="section-card fade-in">
+              <div class="section-head"><h3>Career Summary</h3></div>
+              <div class="summary-list">
+                <div class="summary-row"><span class="k"><span class="ic">💼</span>Career</span><span class="v">.NET Full Stack Developer</span></div>
+                <div class="summary-row"><span class="k"><span class="ic">📈</span>Current Stage</span><span class="v">Intermediate</span></div>
+                <div class="summary-row"><span class="k"><span class="ic">✅</span>Completed Skills</span><span class="v">5</span></div>
+                <div class="summary-row"><span class="k"><span class="ic">⏳</span>Remaining Skills</span><span class="v">18</span></div>
+                <div class="summary-row"><span class="k"><span class="ic">📅</span>Est. Completion</span><span class="v">7 Months</span></div>
+              </div>
+              <button class="btn btn-outline">View Details</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="right-stack">
+
+          <!-- NEXT UP -->
+          <div class="nextup-card fade-in">
+            <div class="section-head" style="margin-bottom:2px;"><h3 style="font-size:14.5px;">Next Up</h3></div>
+            <div class="nextup-top">
+              <div class="nextup-icon">📦</div>
+              <div>
+                <div style="font-size:14.5px; font-weight:700;">LINQ</div>
+                <div style="font-size:12px; color:var(--ink-faint);">Language Integrated Query</div>
+              </div>
+            </div>
+            <div class="nextup-meta-grid">
+              <div><div class="l">Estimated Time</div><div class="v">⏱️ 5 Hours</div></div>
+              <div><div class="l">Difficulty</div><div class="v">📶 Intermediate</div></div>
+            </div>
+            <button class="btn btn-primary">Start Learning →</button>
+          </div>
+
+          <!-- PLACEMENT READINESS -->
+          <div class="glass-card gauge-card fade-in">
+            <div class="section-head" style="width:100%; margin-bottom:4px;"><h3 style="font-size:14.5px;">Placement Readiness</h3><span class="preview-tag">Preview</span></div>
+            <div class="gauge-wrap">
+              <svg viewBox="0 0 110 110" width="110" height="110" style="transform:rotate(-90deg);">
+                <circle cx="55" cy="55" r="46" fill="none" stroke="var(--line)" stroke-width="9"/>
+                <circle cx="55" cy="55" r="46" fill="none" stroke="url(#gaugeGrad)" stroke-width="9" stroke-linecap="round" stroke-dasharray="226 289"/>
+                <defs><linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22C55E"/><stop offset="55%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient></defs>
+              </svg>
+              <div class="ring-pct" style="inset:0;"><span class="n" style="font-size:22px;">78%</span><span class="l">Your Score</span></div>
+            </div>
+            <div style="font-size:13px; font-weight:700;">You're doing great! 🎉</div>
+            <p style="font-size:12px;">Keep learning and building projects to improve your score.</p>
+            <p class="gauge-note">This is a preview score. Full placement readiness calculation will be available in the Major Project. <a href="#" style="color:var(--primary); font-weight:700;">Learn More</a></p>
+          </div>
+
+          <!-- UPCOMING MODULES -->
+          <div class="section-card fade-in">
+            <div class="section-head"><h3>Upcoming Modules</h3><a class="link-sm" href="#">View All →</a></div>
+            <div class="upcoming-grid">
+              <div class="upc-card"><div class="ic" style="background:linear-gradient(135deg,#EF4444,#F87171);">💼</div><div class="nm">Projects</div><span class="bd">Coming Soon</span></div>
+              <div class="upc-card"><div class="ic" style="background:linear-gradient(135deg,var(--secondary),#A78BFA);">📝</div><div class="nm">Mock Assessments</div><span class="bd">Coming Soon</span></div>
+              <div class="upc-card"><div class="ic" style="background:linear-gradient(135deg,var(--accent),#22D3EE);">📄</div><div class="nm">Resume Builder</div><span class="bd">Coming Soon</span></div>
+              <div class="upc-card"><div class="ic" style="background:linear-gradient(135deg,var(--primary),#3B82F6);">👨‍🏫</div><div class="nm">Mentor Connect</div><span class="bd">Coming Soon</span></div>
+              <div class="upc-card"><div class="ic" style="background:linear-gradient(135deg,var(--warning),#FBBF24);">🎯</div><div class="nm">Opportunities</div><span class="bd">Coming Soon</span></div>
+              <div class="upc-card"><div class="ic" style="background:linear-gradient(135deg,#0EA5E9,var(--accent));">📊</div><div class="nm">Analytics</div><span class="bd">Coming Soon</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="section-card fade-in" style="margin-top:22px;">
+        <div class="section-head"><h3>Quick Actions</h3></div>
+        <div class="qa-grid">
+          <button class="qa-btn qa1"><span class="ic">▶️</span>Continue Roadmap</button>
+          <button class="qa-btn qa2"><span class="ic">🔄</span>Retake Assessment</button>
+          <button class="qa-btn qa3"><span class="ic">👤</span>Edit Profile</button>
+          <button class="qa-btn qa4"><span class="ic">🧭</span>Explore Careers</button>
+        </div>
+      </div>
+
+      <!-- MAJOR PROJECT SHOWCASE -->
+      <div class="showcase-band fade-in">
+        <div class="showcase-top">
+          <div>
+            <div class="showcase-title">✨ CareerBridge Major Project Features</div>
+            <div class="showcase-sub">Advanced features coming in the full version of CareerBridge.</div>
+          </div>
+          <a class="showcase-link" href="#">Explore All Features →</a>
+        </div>
+        <div class="showcase-grid">
+          <div class="sc-card"><div class="ic" style="background:linear-gradient(135deg,var(--secondary),#A78BFA);">📄</div><div class="nm">Resume Builder</div><div class="bd">Coming Soon</div></div>
+          <div class="sc-card"><div class="ic" style="background:linear-gradient(135deg,var(--accent),#22D3EE);">🧠</div><div class="nm">AI Career Guidance</div><div class="bd">Coming Soon</div></div>
+          <div class="sc-card"><div class="ic" style="background:linear-gradient(135deg,var(--primary),#3B82F6);">📝</div><div class="nm">Mock Assessments</div><div class="bd">Coming Soon</div></div>
+          <div class="sc-card"><div class="ic" style="background:linear-gradient(135deg,#0EA5E9,var(--accent));">📈</div><div class="nm">Student Analytics</div><div class="bd">Coming Soon</div></div>
+          <div class="sc-card"><div class="ic" style="background:linear-gradient(135deg,var(--warning),#FBBF24);">🧑‍🏫</div><div class="nm">Mentor Dashboard</div><div class="bd">Coming Soon</div></div>
+          <div class="sc-card"><div class="ic" style="background:linear-gradient(135deg,#EF4444,#F87171);">🏢</div><div class="nm">Recruiter Portal</div><div class="bd">Coming Soon</div></div>
+          <div class="sc-card"><div class="ic" style="background:linear-gradient(135deg,var(--secondary),var(--primary));">🔔</div><div class="nm">Notifications</div><div class="bd">Coming Soon</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="dash-footer">
+      <span>© 2026 CareerBridge — Version 1.0 · Mini Project. All rights reserved.</span>
+      <div class="links">
+        <a href="#">Privacy</a><a href="#">About</a><a href="#">GitHub</a><a href="#">Contact</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.onclick = ()=>{
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  themeToggle.textContent = isDark ? '🌙' : '☀️';
+};
+
+const mobileToggle = document.getElementById('mobileToggle');
+const sidebar = document.getElementById('sidebar');
+mobileToggle.onclick = ()=> sidebar.classList.toggle('open');
+document.addEventListener('click', (e)=>{
+  if(window.innerWidth<=900 && sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target!==mobileToggle){
+    sidebar.classList.remove('open');
+  }
+});
+
+// gentle staggered entrance
+document.querySelectorAll('.fade-in').forEach((el,i)=>{
+  el.style.animationDelay = (i*0.04)+'s';
+});
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './LandingPage.css';
 
@@ -72,7 +72,7 @@ const LandingPage = () => {
   <div className="container nav-row">
     <a href="#!" className="logo"><span className="logo-mark"></span>CareerBridge</a>
     <nav className="center-links">
-      <a href="#why">Features</a>
+      <Link to="/features">Features</Link>
       <a href="#paths">Career Paths</a>
       <a href="#showcase">Projects</a>
       <a href="#how">Assessments</a>
