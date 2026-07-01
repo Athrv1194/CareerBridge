@@ -22,6 +22,64 @@ namespace CareerBridge.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CareerBridge.API.Models.AssessmentOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CareerPathId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OptionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Weight")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CareerPathId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("AssessmentOptions");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.AssessmentQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AssessmentQuestions");
+                });
+
             modelBuilder.Entity("CareerBridge.API.Models.CareerPath", b =>
                 {
                     b.Property<int>("Id")
@@ -30,7 +88,168 @@ namespace CareerBridge.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("AverageSalary")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CareerLevel")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DurationMonths")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IndustryDemand")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
+
+                    b.ToTable("CareerPaths");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.CareerPathSkill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CareerPathId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LearningOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SkillId");
+
+                    b.HasIndex("CareerPathId", "SkillId")
+                        .IsUnique();
+
+                    b.ToTable("CareerPathSkills");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.CareerRecommendation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CareerPathId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("MatchPercentage")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<string>("RecommendationReason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CareerPathId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("CareerRecommendations");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.PlacementReadiness", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AssessmentScore")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CalculatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OverallScore")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectScore")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoadmapScore")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SkillScore")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("PlacementReadinesses");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CareerPathId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EstimatedDuration")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GitHubTemplate")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -40,10 +259,39 @@ namespace CareerBridge.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Title")
+                    b.HasIndex("CareerPathId");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.Roadmap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CareerPathId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CareerPathId");
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("CareerPaths");
+                    b.ToTable("Roadmaps");
                 });
 
             modelBuilder.Entity("CareerBridge.API.Models.RoadmapStep", b =>
@@ -57,17 +305,24 @@ namespace CareerBridge.API.Migrations
                     b.Property<int>("CareerPathId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Order")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EstimatedHours")
                         .HasColumnType("int");
 
-                    b.Property<int>("SkillId")
+                    b.Property<int>("LearningOrder")
                         .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CareerPathId");
-
-                    b.HasIndex("SkillId");
 
                     b.ToTable("RoadmapSteps");
                 });
@@ -80,8 +335,20 @@ namespace CareerBridge.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EstimatedLearningHours")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -96,6 +363,67 @@ namespace CareerBridge.API.Migrations
                     b.ToTable("Skills");
                 });
 
+            modelBuilder.Entity("CareerBridge.API.Models.StudentProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AcademicYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Bio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Branch")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("CGPA")
+                        .HasPrecision(4, 2)
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<string>("CareerInterest")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("CollegeName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Degree")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PreferredLocation")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("StudentProfiles");
+                });
+
             modelBuilder.Entity("CareerBridge.API.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -104,36 +432,41 @@ namespace CareerBridge.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("Username")
-                        .IsUnique();
-
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CareerBridge.API.Models.UserProgress", b =>
+            modelBuilder.Entity("CareerBridge.API.Models.UserAssessment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -141,13 +474,65 @@ namespace CareerBridge.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCompleted")
+                    b.Property<bool>("Completed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAssessments");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.UserAssessmentAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AssessmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentId");
+
+                    b.HasIndex("OptionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("UserAssessmentAnswers");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.UserRoadmapProgress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("RoadmapStepId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -159,7 +544,104 @@ namespace CareerBridge.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserProgresses");
+                    b.ToTable("UserRoadmapProgresses");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.AssessmentOption", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.CareerPath", "CareerPath")
+                        .WithMany()
+                        .HasForeignKey("CareerPathId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CareerBridge.API.Models.AssessmentQuestion", "Question")
+                        .WithMany("AssessmentOptions")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CareerPath");
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.CareerPathSkill", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.CareerPath", "CareerPath")
+                        .WithMany("CareerPathSkills")
+                        .HasForeignKey("CareerPathId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CareerBridge.API.Models.Skill", "Skill")
+                        .WithMany("CareerPathSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CareerPath");
+
+                    b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.CareerRecommendation", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.CareerPath", "CareerPath")
+                        .WithMany()
+                        .HasForeignKey("CareerPathId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CareerBridge.API.Models.User", "User")
+                        .WithOne("CareerRecommendation")
+                        .HasForeignKey("CareerBridge.API.Models.CareerRecommendation", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CareerPath");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.PlacementReadiness", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.User", "User")
+                        .WithOne("PlacementReadiness")
+                        .HasForeignKey("CareerBridge.API.Models.PlacementReadiness", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.Project", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.CareerPath", "CareerPath")
+                        .WithMany("Projects")
+                        .HasForeignKey("CareerPathId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CareerPath");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.Roadmap", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.CareerPath", "CareerPath")
+                        .WithMany()
+                        .HasForeignKey("CareerPathId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CareerBridge.API.Models.User", "User")
+                        .WithOne("Roadmap")
+                        .HasForeignKey("CareerBridge.API.Models.Roadmap", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CareerPath");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CareerBridge.API.Models.RoadmapStep", b =>
@@ -170,27 +652,68 @@ namespace CareerBridge.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CareerBridge.API.Models.Skill", "Skill")
-                        .WithMany("RoadmapSteps")
-                        .HasForeignKey("SkillId")
+                    b.Navigation("CareerPath");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.StudentProfile", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.User", "User")
+                        .WithOne("StudentProfile")
+                        .HasForeignKey("CareerBridge.API.Models.StudentProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CareerPath");
-
-                    b.Navigation("Skill");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CareerBridge.API.Models.UserProgress", b =>
+            modelBuilder.Entity("CareerBridge.API.Models.UserAssessment", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.User", "User")
+                        .WithMany("UserAssessments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.UserAssessmentAnswer", b =>
+                {
+                    b.HasOne("CareerBridge.API.Models.UserAssessment", "Assessment")
+                        .WithMany("Answers")
+                        .HasForeignKey("AssessmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CareerBridge.API.Models.AssessmentOption", "Option")
+                        .WithMany()
+                        .HasForeignKey("OptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CareerBridge.API.Models.AssessmentQuestion", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Assessment");
+
+                    b.Navigation("Option");
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.UserRoadmapProgress", b =>
                 {
                     b.HasOne("CareerBridge.API.Models.RoadmapStep", "RoadmapStep")
-                        .WithMany()
+                        .WithMany("UserProgresses")
                         .HasForeignKey("RoadmapStepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CareerBridge.API.Models.User", "User")
-                        .WithMany("UserProgresses")
+                        .WithMany("UserRoadmapProgresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -200,19 +723,48 @@ namespace CareerBridge.API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CareerBridge.API.Models.AssessmentQuestion", b =>
+                {
+                    b.Navigation("AssessmentOptions");
+                });
+
             modelBuilder.Entity("CareerBridge.API.Models.CareerPath", b =>
                 {
+                    b.Navigation("CareerPathSkills");
+
+                    b.Navigation("Projects");
+
                     b.Navigation("RoadmapSteps");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.RoadmapStep", b =>
+                {
+                    b.Navigation("UserProgresses");
                 });
 
             modelBuilder.Entity("CareerBridge.API.Models.Skill", b =>
                 {
-                    b.Navigation("RoadmapSteps");
+                    b.Navigation("CareerPathSkills");
                 });
 
             modelBuilder.Entity("CareerBridge.API.Models.User", b =>
                 {
-                    b.Navigation("UserProgresses");
+                    b.Navigation("CareerRecommendation");
+
+                    b.Navigation("PlacementReadiness");
+
+                    b.Navigation("Roadmap");
+
+                    b.Navigation("StudentProfile");
+
+                    b.Navigation("UserAssessments");
+
+                    b.Navigation("UserRoadmapProgresses");
+                });
+
+            modelBuilder.Entity("CareerBridge.API.Models.UserAssessment", b =>
+                {
+                    b.Navigation("Answers");
                 });
 #pragma warning restore 612, 618
         }

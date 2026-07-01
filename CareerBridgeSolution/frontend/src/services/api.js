@@ -10,7 +10,7 @@ const apiClient = axios.create({
 
 // Code-Reduction Masterstroke: Automatically injects JWT token if it exists in local memory
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('careerbridge_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`; // Matches backend [Authorize] guard rules
   }

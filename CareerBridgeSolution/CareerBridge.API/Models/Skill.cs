@@ -1,18 +1,20 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using CareerBridge.API.Enums;
 
 namespace CareerBridge.API.Models
 {
     public class Skill
     {
-        [Key]
         public int Id { get; set; }
-
-        [Required]
+        [Required, MaxLength(100)]
+        public string Name { get; set; } = string.Empty;
         [MaxLength(100)]
-        public required string Name { get; set; }
+        public string Category { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public SkillDifficulty Difficulty { get; set; }
+        public int EstimatedLearningHours { get; set; }
 
-        public string? Description { get; set; }
-
-        public ICollection<RoadmapStep> RoadmapSteps { get; set; } = new List<RoadmapStep>();
+        public ICollection<CareerPathSkill> CareerPathSkills { get; set; } = new List<CareerPathSkill>();
     }
 }

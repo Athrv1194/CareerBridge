@@ -1,27 +1,29 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using CareerBridge.API.Enums;
 
 namespace CareerBridge.API.Models
 {
     public class User
     {
-        [Key]
         public int Id { get; set; }
-
+        [Required, MaxLength(150)]
+        public string FullName { get; set; } = string.Empty;
+        [Required, EmailAddress, MaxLength(255)]
+        public string Email { get; set; } = string.Empty;
         [Required]
-        [MaxLength(100)]
-        public required string Username { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
+        public UserRole Role { get; set; } = UserRole.Student;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsActive { get; set; } = true;
 
-        [Required]
-        [EmailAddress]
-        [MaxLength(150)]
-        public required string Email { get; set; }
-
-        [Required]
-        public required string PasswordHash { get; set; }
-
-        [Required]
-        public required string Role { get; set; }
-
-        public ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
+        public StudentProfile? StudentProfile { get; set; }
+        public CareerRecommendation? CareerRecommendation { get; set; }
+        public Roadmap? Roadmap { get; set; }
+        public PlacementReadiness? PlacementReadiness { get; set; }
+        public ICollection<UserAssessment> UserAssessments { get; set; } = new List<UserAssessment>();
+        public ICollection<UserRoadmapProgress> UserRoadmapProgresses { get; set; } = new List<UserRoadmapProgress>();
     }
 }

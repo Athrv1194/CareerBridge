@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { getRoadmap } from '../services/dataService';
 import './CareerRoadmap.css';
 import { useNavigate } from 'react-router-dom';
+
 
 const modules = [
   {id:1,icon:'🎮',title:'Programming Basics',desc:'Learn the fundamentals of programming.',hours:8,diff:'Beginner',status:'done',
@@ -92,10 +94,42 @@ const diffText = {
 
 export default function CareerRoadmap() {
   const navigate = useNavigate();
-  const [activeId, setActiveId] = useState(3);
+  const [activeId, setActiveId] = useState(0);
+  const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const activeModule = modules.find(m => m.id === activeId);
-  const sm = activeModule ? statusMap[activeModule.status] : null;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchRoadmap();
+  }, []);
+
+  const fetchRoadmap = async () => {
+    try {
+        const res = await getRoadmap();
+        if (res.data.success) {
+            setModules(res.data.data.steps || []);
+            if (res.data.data.steps && res.data.data.steps.length > 0) {
+                setActiveId(res.data.data.steps[0].id);
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load roadmap', err);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const activeModule = modules.find(m => m.id === activeId) || modules[0];
+  
+  let sm = null;
+  if (activeModule) {
+      let statusKey = "locked";
+      if (activeModule.status === "Completed") statusKey = "done";
+      if (activeModule.status === "In Progress") statusKey = "learning";
+      if (activeModule.status === "Pending") statusKey = "upcoming";
+      sm = statusMap[statusKey];
+  }
+
 
   useEffect(() => {
     // animate progress fills and ring 
@@ -244,13 +278,13 @@ export default function CareerRoadmap() {
                       <div className="rm-connector"></div>
                       <div className="rm-content">
                         <div className="rm-top">
-                          <span className="rm-title">{m.icon} {m.title}</span>
+                          <span className="rm-title">{m.icon || '📘'} {m.title}</span>
                           <span className={`rm-status ${sMap.cls}`}>{sMap.label}</span>
                         </div>
                         <div className="rm-desc">{m.desc}</div>
                         <div className="rm-meta">
-                          <span>⏱ {m.hours} Hours</span>
-                          <span>📊 {m.diff}</span>
+                          <span>⏱ {m.expectedDuration || 'TBD'}</span>
+                          <span>📊 {m.diff || 'Beginner'}</span>
                         </div>
                       </div>
                     </div>
@@ -283,11 +317,11 @@ export default function CareerRoadmap() {
                         <div className="dm-l">Difficulty</div>
                         <div className="dm-v" style={{ color: diffText[activeModule.diff] }}>{activeModule.diff}</div>
                       </div>
-                      {activeModule.prereqs.length > 0 && (
+                      {(activeModule.prereqs || []).length > 0 && (
                         <div className="dc-meta-item">
                           <div className="dm-l">Prerequisites</div>
                           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '3px' }}>
-                            {activeModule.prereqs.map((p, i) => (
+                            {(activeModule.prereqs || []).map((p, i) => (
                               <span key={i} className="prereq-chip">{p}</span>
                             ))}
                           </div>
@@ -297,14 +331,14 @@ export default function CareerRoadmap() {
                     
                     <div className="dc-section-label">Topics Covered</div>
                     <div className="topics-grid">
-                      {activeModule.topics.map((t, i) => (
+                      {(activeModule.topics || []).map((t, i) => (
                         <div key={i} className="topic-chip">✦ {t}</div>
                       ))}
                     </div>
 
                     <div className="dc-section-label">Learning Resources</div>
                     <div className="resources-grid">
-                      {activeModule.resources.map((r, i) => (
+                      {(activeModule.resources || []).map((r, i) => (
                         <div key={i} className="res-card">
                           <div className="ri">{r.i}</div>
                           <div className="rn">{r.n}</div>
@@ -317,16 +351,16 @@ export default function CareerRoadmap() {
                   <div className="detail-card">
                     <div className="dc-section-label">Practice Project</div>
                     <div className="practice-card">
-                      <div className="pc-icon">{activeModule.project.icon}</div>
+                      <div className="pc-icon">{activeModule.project?.icon}</div>
                       <div className="pc-body">
-                        <div className="pc-title">{activeModule.project.title}</div>
-                        <div className="pc-meta">{activeModule.project.skills}</div>
+                        <div className="pc-title">{activeModule.project?.title}</div>
+                        <div className="pc-meta">{activeModule.project?.skills}</div>
                         <div style={{ display: 'flex', gap: '16px', marginTop: '6px', fontSize: '11px', color: 'var(--ink-soft)' }}>
-                          <span>⏱ {activeModule.project.time}</span>
+                          <span>⏱ {activeModule.project?.time}</span>
                         </div>
                       </div>
-                      <span className="pc-diff" style={{ background: diffColors[activeModule.project.diff], color: diffText[activeModule.project.diff] }}>
-                        {activeModule.project.diff}
+                      <span className="pc-diff" style={{ background: diffColors[activeModule.project?.diff], color: diffText[activeModule.project?.diff] }}>
+                        {activeModule.project?.diff}
                       </span>
                     </div>
                     
