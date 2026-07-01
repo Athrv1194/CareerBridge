@@ -408,7 +408,14 @@ const Onboarding = () => {
               </linearGradient>
             </defs>
             <circle className="ring-track" cx="60" cy="60" r="52"/>
-            <circle className="ring-fill" id="ringFill" cx="60" cy="60" r="52" strokeDasharray="326.7" strokeDashoffset="326.7"/>
+            <circle 
+              className="ring-fill" 
+              id="ringFill" 
+              cx="60" cy="60" r="52" 
+              strokeDasharray="326.7" 
+              strokeDashoffset={strokeDashoffset}
+              style={{ transition: 'stroke-dashoffset 0.8s ease-out' }}
+            />
           </svg>
           <div className="ring-text"><span className="pct" >{completePct}%</span><span className="lbl">Complete</span></div>
         </div>
