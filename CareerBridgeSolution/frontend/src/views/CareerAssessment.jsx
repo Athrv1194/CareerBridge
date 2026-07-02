@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './CareerAssessment.css';
 
 const CAREERS = [
@@ -32,6 +33,7 @@ const QUESTIONS = [
 
 export default function CareerAssessment() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [langSearch, setLangSearch] = useState('');
@@ -206,6 +208,7 @@ export default function CareerAssessment() {
 
           <div className="nav-right">
             <button className="icon-btn">🌙</button>
+            <button className="btn btn-sm" style={{borderColor: 'var(--danger)', color: 'var(--danger)', background: 'transparent', marginLeft: '12px'}} onClick={() => { logout(); navigate('/login'); }}>Logout</button>
             <button className="icon-btn">🔔</button>
             <button className="icon-btn">❓</button>
           </div>
@@ -423,9 +426,9 @@ export default function CareerAssessment() {
 
       {/* ANALYZE OVERLAY */}
       {isAnalyzing && (
-        <div className="analyze-overlay active">
+        <div className="analyze-overlay show">
           {!matchResult ? (
-            <div className="analyze-panel active">
+            <div className="analyze-panel show">
               <div className="ai-orb">
                 <svg viewBox="0 0 120 120">
                   <defs>
@@ -449,14 +452,14 @@ export default function CareerAssessment() {
               </div>
             </div>
           ) : (
-            <div className="success-panel active">
+            <div className="success-panel show">
               <div className="success-card">
                 <div className="success-icon">🎉</div>
                 <h3>Your Career Match is Ready!</h3>
                 <p>Based on your answers, here's the path that fits you best.</p>
                 <div className="match-name">{matchResult.name}</div>
                 <div className="match-meta">{matchResult.meta}</div>
-                <button className="btn btn-primary btn-analyze" style={{width:'100%'}} onClick={() => navigate('/dashboard')}>
+                <button className="btn btn-primary btn-analyze" style={{width:'100%'}} onClick={() => navigate('/recommendation')}>
                   View My Recommendation →
                 </button>
               </div>

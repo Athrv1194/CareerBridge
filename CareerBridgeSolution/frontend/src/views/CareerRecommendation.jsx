@@ -1,26 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CareerRecommendation.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { getRecommendation, startRoadmap } from '../services/dataService';
 
-const otherCareers = [
-  { name:"Java Full Stack Developer", icon:"☕", grad:"linear-gradient(135deg,#2563EB,#3B82F6)", match:88, desc:"Great match for your problem-solving skills and interest in enterprise applications.", demand:"Very High", duration:"8–10 Months", salary:"₹7–16 LPA" },
-  { name:"Frontend Developer", icon:"🎨", grad:"linear-gradient(135deg,#06B6D4,#2563EB)", match:82, desc:"Good match for your creativity and interest in building user interfaces.", demand:"High", duration:"6–8 Months", salary:"₹6–14 LPA" },
-  { name:"Data Analyst", icon:"📊", grad:"linear-gradient(135deg,#7C3AED,#A78BFA)", match:75, desc:"Decent match for your analytical thinking and interest in working with data.", demand:"High", duration:"6–8 Months", salary:"₹5–12 LPA" },
-  { name:"Cloud Engineer", icon:"☁️", grad:"linear-gradient(135deg,#7C3AED,#06B6D4)", match:72, desc:"Good potential match for your interest in cloud technologies and infrastructure.", demand:"High", duration:"8–10 Months", salary:"₹7–15 LPA" },
-];
-
-const scores = [
-  { label:"Interest in Backend Development", pct:95, icon:"⚙️", grad:"linear-gradient(135deg,#2563EB,#7C3AED)" },
-  { label:"Programming Skills", pct:90, icon:"💻", grad:"linear-gradient(135deg,#7C3AED,#A78BFA)" },
-  { label:"Problem Solving Ability", pct:88, icon:"🧩", grad:"linear-gradient(135deg,#06B6D4,#2563EB)" },
-  { label:"Database & SQL Interest", pct:85, icon:"🗄️", grad:"linear-gradient(135deg,#F59E0B,#FBBF24)" },
-  { label:"Web Development Interest", pct:92, icon:"🌐", grad:"linear-gradient(135deg,#2563EB,#06B6D4)" },
-];
+// Removed mock arrays
 
 export default function CareerRecommendation() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  };
+  
+  const userName = user?.fullName || "User";
+  const userRole = user?.role || "Student";
+  const [rec, setRec] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    // Fetch recommendation
+    getRecommendation().then(res => {
+      if (res.data?.data) {
+        setRec(res.data.data);
+      }
+      setLoading(false);
+    }).catch(err => {
+      console.error(err);
+      setLoading(false);
+    });
+    
     // Animate on load
     const timer = setTimeout(() => {
       const topRing = document.getElementById('topRing');
@@ -35,6 +47,18 @@ export default function CareerRecommendation() {
     }, 150);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleStartRoadmap = async (e) => {
+      if(e) e.preventDefault();
+      try {
+          await startRoadmap();
+          navigate('/roadmap');
+      } catch (err) {
+          console.error("Failed to start roadmap", err);
+          // navigate anyway in case it was already started
+          navigate('/roadmap');
+      }
+  };
 
   return (
     <div className="career-recommendation-wrapper">
@@ -52,16 +76,16 @@ export default function CareerRecommendation() {
             <span>CareerBridge<span className="sub">Your Bridge to a Better Career</span></span>
           </div>
           <nav className="sb-nav">
-            <a href="#" className="sb-link"><span className="ic">📊</span>Dashboard</a>
-            <a href="#" className="sb-link"><span className="ic">📝</span>Assessment</a>
-            <a href="#" className="sb-link active"><span className="ic">🎯</span>Recommendation</a>
-            <a href="#" className="sb-link"><span className="ic">🗺️</span>Roadmap</a>
-            <a href="#" className="sb-link"><span className="ic">📈</span>Skill Progress</a>
-            <a href="#" className="sb-link"><span className="ic">💼</span>Projects</a>
-            <a href="#" className="sb-link"><span className="ic">✅</span>Mock Tests</a>
-            <a href="#" className="sb-link"><span className="ic">📄</span>Resume Gap</a>
-            <a href="#" className="sb-link"><span className="ic">🏆</span>Placement Readiness</a>
-            <a href="#" className="sb-link"><span className="ic">🚀</span>Opportunities</a>
+            <a href="#" className="sb-link" onClick={(e) => { e.preventDefault(); navigate('/student-dashboard'); }}><span className="ic">📊</span>Dashboard</a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">📝</span>Assessment<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link active" onClick={(e) => { e.preventDefault(); navigate('/recommendation'); }}><span className="ic">🎯</span>Recommendation</a>
+            <a href="#" className="sb-link" onClick={(e) => { e.preventDefault(); navigate('/roadmap'); }}><span className="ic">🗺️</span>Roadmap</a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">📈</span>Skill Progress<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">💼</span>Projects<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">✅</span>Mock Tests<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">📄</span>Resume Gap<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">🏆</span>Placement Readiness<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">🚀</span>Opportunities<span className="sb-badge">Coming Soon</span></a>
           </nav>
           <div className="sb-promo">
             <div className="pi">🚀</div>
@@ -77,9 +101,10 @@ export default function CareerRecommendation() {
             <div className="tb-right">
               <button className="icon-btn">🌙</button>
               <button className="icon-btn">🔔<span className="badge">1</span></button>
+              <button className="btn btn-sm" style={{borderColor: 'var(--danger)', color: 'var(--danger)', background: 'transparent', marginLeft: '12px', marginRight: '12px'}} onClick={() => { logout(); navigate('/login'); }}>Logout</button>
               <div className="user-chip">
-                <div className="user-avatar">RS</div>
-                <div className="user-meta"><div className="name">Hello, Rahul</div><div className="role">Student</div></div>
+                <div className="user-avatar">{getInitials(userName)}</div>
+                <div className="user-meta"><div className="name">Hello, {userName}</div><div className="role">{userRole}</div></div>
               </div>
             </div>
           </header>
@@ -91,23 +116,20 @@ export default function CareerRecommendation() {
                 <h1>Your Career <span className="grad">Recommendations</span> Are Ready 🎉</h1>
                 <p>Based on your interests, technical preferences, and assessment responses, we've identified the career paths that best match your profile.</p>
                 <div className="hero-actions">
-                  <a href="#topmatch" className="btn btn-primary">View Best Match →</a>
+                  <a href="#topmatch" className="btn btn-primary" onClick={(e) => { e.preventDefault(); document.getElementById('topmatch')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>View Best Match →</a>
                   <a href="#" className="btn btn-outline" onClick={(e) => { e.preventDefault(); navigate('/assessment'); }}>Retake Assessment</a>
                 </div>
               </div>
 
               <div className="summary-card">
                 <h3>Assessment Summary</h3>
-                <div className="sum-row"><span className="k">📅 Assessment Completed</span><span className="v">May 18, 2026</span></div>
-                <div className="sum-row"><span className="k">❓ Questions Answered</span><span className="v">20 / 20</span></div>
-                <div className="sum-row"><span className="k">⏱️ Completion Time</span><span className="v">12 min 48 sec</span></div>
+                <div className="sum-row"><span className="k">📅 Assessment Completed</span><span className="v">{rec ? new Date(rec.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Loading...'}</span></div>
+                <div className="sum-row"><span className="k">❓ Questions Answered</span><span className="v">10 / 10</span></div>
                 <div className="interest-label">Your Top Interests</div>
                 <div className="interest-chips">
-                  <span>✓ Backend Development</span>
-                  <span>✓ Problem Solving</span>
-                  <span>✓ APIs</span>
-                  <span>✓ Cloud Computing</span>
-                  <span>✓ Database Design</span>
+                  {rec?.strengths ? rec.strengths.map((strength, i) => (
+                    <span key={i}>✓ {strength}</span>
+                  )) : <span>Loading...</span>}
                 </div>
               </div>
             </div>
@@ -120,25 +142,25 @@ export default function CareerRecommendation() {
                   <div className="tm-top">
                     <div className="tm-icon">🔷</div>
                     <div>
-                      <div className="tm-title"><h2>.NET Full Stack Developer</h2><span className="tm-excellent">✓ Excellent Match</span></div>
-                      <p className="tm-desc">This role perfectly aligns with your interests in backend development, APIs, databases, and enterprise application development.</p>
+                      <div className="tm-title"><h2>{rec ? rec.careerTitle : 'Loading...'}</h2><span className="tm-excellent">✓ Excellent Match</span></div>
+                      <p className="tm-desc">{rec ? rec.recommendationReason : 'Loading description...'}</p>
                     </div>
                   </div>
                   <div className="tm-stats">
-                    <div className="tm-stat"><div className="lbl">Average Salary</div><div className="val">₹8–18 LPA</div></div>
-                    <div className="tm-stat"><div className="lbl">Industry Demand</div><div className="val">Very High</div></div>
-                    <div className="tm-stat"><div className="lbl">Difficulty</div><div className="val">Medium</div></div>
-                    <div className="tm-stat"><div className="lbl">Learning Duration</div><div className="val">8–10 Months</div></div>
-                    <div className="tm-stat"><div className="lbl">Hiring Trend</div><div className="val" style={{ color: 'var(--success)' }}>↗ Growing +32%</div></div>
+                    <div className="tm-stat"><div className="lbl">Average Salary</div><div className="val">{rec ? rec.averageSalary : '-'}</div></div>
+                    <div className="tm-stat"><div className="lbl">Industry Demand</div><div className="val">{rec ? rec.industryDemand : '-'}</div></div>
+                    <div className="tm-stat"><div className="lbl">Learning Duration</div><div className="val">{rec ? rec.estimatedDuration : '-'}</div></div>
                   </div>
                   <div className="tm-tech-label">Required Technologies</div>
                   <div className="tm-tech">
-                    <span>C#</span><span>ASP.NET Core</span><span>SQL Server</span><span>Entity Framework</span><span>REST API</span><span>JWT</span><span>React</span><span>Git</span><span>Azure</span>
+                    {rec?.recommendedSkills ? rec.recommendedSkills.map((skill, index) => (
+                      <span key={index}>{skill}</span>
+                    )) : <span>Loading...</span>}
                   </div>
-                  <div className="tm-actions">
-                    <a href="#" className="btn btn-primary">Start Learning Roadmap →</a>
-                    <a href="#" className="btn btn-outline">View Career Details</a>
-                  </div>
+                    <div className="tm-actions">
+                      <a href="#" className="btn btn-primary" onClick={handleStartRoadmap}>Start Learning Roadmap →</a>
+                      <a href="#" className="btn btn-outline" onClick={(e) => { e.preventDefault(); document.getElementById('alternatives')?.scrollIntoView({ behavior: 'smooth' }); }}>Explore Alternatives</a>
+                    </div>
                 </div>
 
                 <div className="match-ring">
@@ -158,31 +180,37 @@ export default function CareerRecommendation() {
             <div className="section-block">
               <div className="section-block-head"><h3>Other Recommended Careers</h3><a href="#">View All Careers →</a></div>
               <div className="career-row" id="careerRow">
-                {otherCareers.map((c, i) => {
-                  const ringColor = c.match >= 85 ? '#16A34A' : c.match >= 75 ? '#2563EB' : '#7C3AED';
+                {rec?.alternatives?.length > 0 ? rec.alternatives.map((c, i) => {
+                  const match = c.matchPercentage;
+                  const ringColor = match >= 85 ? '#16A34A' : match >= 75 ? '#2563EB' : '#7C3AED';
                   const circumference = 2 * Math.PI * 20;
-                  const offset = circumference - (c.match / 100) * circumference;
+                  const offset = circumference - (match / 100) * circumference;
+                  
+                  // Keep dynamic icons/gradients
+                  const grads = ["linear-gradient(135deg,#2563EB,#3B82F6)", "linear-gradient(135deg,#06B6D4,#2563EB)", "linear-gradient(135deg,#7C3AED,#A78BFA)"];
+                  const icons = ["☕", "🎨", "📊"];
+                  
                   return (
                     <div key={i} className="career-card">
                       <div className="cc-top">
-                        <div className="cc-icon" style={{ background: c.grad }}>{c.icon}</div>
+                        <div className="cc-icon" style={{ background: grads[i % 3] }}>{icons[i % 3]}</div>
                         <div className="cc-ring">
                           <svg viewBox="0 0 46 46">
                             <circle className="cc-ring-track" cx="23" cy="23" r="20" />
                             <circle className="cc-ring-fill" cx="23" cy="23" r="20" stroke={ringColor} strokeDasharray={circumference} strokeDashoffset={offset} />
                           </svg>
-                          <div className="cc-ring-text">{c.match}%</div>
+                          <div className="cc-ring-text">{match}%</div>
                         </div>
                       </div>
-                      <h4>{c.name}</h4>
-                      <p className="cdesc">{c.desc}</p>
-                      <div className="cc-meta-row"><span className="k">Demand</span><span className="v">{c.demand}</span></div>
-                      <div className="cc-meta-row"><span className="k">Duration</span><span className="v">{c.duration}</span></div>
-                      <div className="cc-meta-row"><span className="k">Salary</span><span className="v">{c.salary}</span></div>
-                      <div className="cc-btns"><button className="cc-btn-compare">Compare</button><button className="cc-btn-roadmap">View Roadmap</button></div>
+                      <h4>{c.title}</h4>
+                      <p className="cdesc">{c.description}</p>
+                      <div className="cc-meta-row"><span className="k">Demand</span><span className="v">{c.industryDemand}</span></div>
+                      <div className="cc-meta-row"><span className="k">Duration</span><span className="v">{c.estimatedDuration}</span></div>
+                      <div className="cc-meta-row"><span className="k">Salary</span><span className="v">{c.averageSalary}</span></div>
+                      <div className="cc-btns"><button className="cc-btn-compare">Compare</button><button className="cc-btn-roadmap" onClick={() => navigate('/roadmap')}>View Roadmap</button></div>
                     </div>
                   );
-                })}
+                }) : <div style={{ padding: '20px', color: 'var(--ink-soft)' }}>Loading alternative careers...</div>}
               </div>
             </div>
 
@@ -192,30 +220,46 @@ export default function CareerRecommendation() {
                 <h3>Why These Recommendations?</h3>
                 <p>Your assessment responses were analyzed across multiple factors.</p>
                 <div id="scoreList">
-                  {scores.map((s, i) => (
-                    <div key={i} className="score-row">
-                      <div className="score-ic" style={{ background: s.grad }}>{s.icon}</div>
-                      <div className="score-body">
-                        <div className="score-top"><span>{s.label}</span><span>{s.pct}%</span></div>
-                        <div className="score-bar-track">
-                          <div className="score-bar-fill" data-pct={s.pct} style={{ width: '0%' }}></div>
+                  {rec?.categoryScores?.length > 0 ? rec.categoryScores.map((s, i) => {
+                    const grads = [
+                        "linear-gradient(135deg,#2563EB,#7C3AED)",
+                        "linear-gradient(135deg,#7C3AED,#A78BFA)",
+                        "linear-gradient(135deg,#06B6D4,#2563EB)",
+                        "linear-gradient(135deg,#F59E0B,#FBBF24)",
+                        "linear-gradient(135deg,#2563EB,#06B6D4)"
+                    ];
+                    const icons = ["⚙️", "💻", "🧩", "📱", "🌐"];
+                    return (
+                      <div key={i} className="score-row">
+                        <div className="score-ic" style={{ background: grads[i % grads.length] }}>{icons[i % icons.length]}</div>
+                        <div className="score-body">
+                          <div className="score-top"><span>{s.label}</span><span>{s.percentage}%</span></div>
+                          <div className="score-bar-track">
+                            <div className="score-bar-fill" data-pct={s.percentage} style={{ width: `${s.percentage}%` }}></div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  }) : <div style={{ padding: '20px', color: 'var(--ink-soft)' }}>Loading insights...</div>}
                 </div>
               </div>
 
               <div className="roadmap-card">
                 <h3>Learning Journey Preview</h3>
-                <p>.NET Full Stack Developer roadmap</p>
+                <p>{rec?.careerTitle || 'Career'} roadmap</p>
                 <div className="rm-timeline">
-                  <div className="rm-step"><div className="rm-step-top"><div className="rm-num">1</div><span className="rm-week">Week 1–2</span></div><div className="rm-skill">C# &amp; OOP</div><p className="rm-sub">Language fundamentals</p></div>
-                  <div className="rm-step"><div className="rm-step-top"><div className="rm-num">2</div><span className="rm-week">Week 3</span></div><div className="rm-skill">SQL Server</div><p className="rm-sub">Database design</p></div>
-                  <div className="rm-step"><div className="rm-step-top"><div className="rm-num">3</div><span className="rm-week">Week 4–5</span></div><div className="rm-skill">ASP.NET Core + REST APIs</div><p className="rm-sub">Backend &amp; JWT auth</p></div>
-                  <div className="rm-step"><div className="rm-step-top"><div className="rm-num">4</div><span className="rm-week">Week 6–8</span></div><div className="rm-skill">React + Project</div><p className="rm-sub">Frontend &amp; capstone</p></div>
+                  {rec?.roadmapSteps?.length > 0 ? rec.roadmapSteps.map((step, i) => (
+                    <div key={i} className="rm-step">
+                      <div className="rm-step-top">
+                        <div className="rm-num">{step.stepNumber}</div>
+                        <span className="rm-week">{step.duration}</span>
+                      </div>
+                      <div className="rm-skill">{step.title}</div>
+                      <p className="rm-sub">{step.subtitle}</p>
+                    </div>
+                  )) : <div style={{ padding: '20px', color: 'var(--ink-soft)' }}>Loading roadmap preview...</div>}
                 </div>
-                <div className="rm-foot"><a href="#" className="btn btn-outline" style={{ width: '100%' }}>View Full Roadmap →</a></div>
+                <div className="rm-foot"><button onClick={() => navigate('/roadmap')} className="btn btn-outline" style={{ width: '100%' }}>View Full Roadmap →</button></div>
               </div>
             </div>
 
@@ -249,6 +293,30 @@ export default function CareerRecommendation() {
           </main>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+          <div className="modal-content" style={{ backgroundColor: 'white', padding: '30px', borderRadius: '12px', maxWidth: '600px', width: '90%', position: 'relative' }}>
+            <button style={{ position: 'absolute', top: '15px', right: '15px', border: 'none', background: 'transparent', fontSize: '20px', cursor: 'pointer' }} onClick={() => setIsModalOpen(false)}>✕</button>
+            <h2 style={{ marginBottom: '10px', fontSize: '24px', fontWeight: 'bold' }}>{rec?.careerTitle}</h2>
+            <p style={{ marginBottom: '20px', color: 'var(--ink-soft)', lineHeight: '1.5' }}>{rec?.careerDescription}</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px', padding: '15px', background: 'var(--bg)', borderRadius: '8px' }}>
+              <div><strong>💰 Salary:</strong> {rec?.averageSalary}</div>
+              <div><strong>📈 Demand:</strong> {rec?.industryDemand}</div>
+              <div><strong>⏱️ Duration:</strong> {rec?.estimatedDuration}</div>
+              <div><strong>🎯 Match Score:</strong> {rec?.matchPercentage}%</div>
+            </div>
+            <div style={{ marginBottom: '20px' }}>
+              <strong style={{ display: 'block', marginBottom: '10px' }}>Key Strengths Validated:</strong>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                {rec?.strengths?.map(s => <span key={s} style={{ background: 'var(--primary-light)', color: 'var(--primary)', padding: '5px 12px', borderRadius: '100px', fontSize: '13px', fontWeight: '600' }}>✓ {s}</span>)}
+              </div>
+            </div>
+            <a href="#" className="btn btn-primary" style={{ display: 'block', textAlign: 'center', width: '100%', boxSizing: 'border-box' }} onClick={(e) => { e.preventDefault(); navigate('/roadmap'); }}>Proceed to Learning Roadmap</a>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

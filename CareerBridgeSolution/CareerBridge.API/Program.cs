@@ -8,7 +8,10 @@ using Microsoft.Extensions.Hosting;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+});
 builder.Services.AddEndpointsApiExplorer();
 
 // Extension Methods Configuration
@@ -34,7 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled to fix React HTTP connection issues
 app.UseStaticFiles();
 
 // CORS & Auth
@@ -44,4 +47,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+    app.Run();

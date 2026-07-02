@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getRoadmap } from '../services/dataService';
 import './CareerRoadmap.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 
 const modules = [
@@ -94,9 +95,22 @@ const diffText = {
 
 export default function CareerRoadmap() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  };
+  
+  const userName = user?.fullName || "User";
+  const userRole = user?.role || "Student";
+  
   const [activeId, setActiveId] = useState(0);
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [roadmapMeta, setRoadmapMeta] = useState({
+      careerTitle: "Loading...", progress: 0, estimatedCompletion: "", completedModules: 0, totalModules: 0, learningHours: 0
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -106,10 +120,51 @@ export default function CareerRoadmap() {
   const fetchRoadmap = async () => {
     try {
         const res = await getRoadmap();
-        if (res.data.success) {
-            setModules(res.data.data.steps || []);
-            if (res.data.data.steps && res.data.data.steps.length > 0) {
-                setActiveId(res.data.data.steps[0].id);
+        if (res.data.success && res.data.data) {
+            const rd = res.data.data;
+            const completed = rd.skills?.filter(s => s.status === 'Completed' || s.status === 'Verified').length || 0;
+            const total = rd.skills?.length || 0;
+            const hours = rd.skills?.filter(s => s.status === 'Completed' || s.status === 'Verified').reduce((acc, s) => acc + (s.estimatedDays * 2), 0) || 0;
+            
+            setRoadmapMeta({
+                careerTitle: rd.careerTitle || "Your Career Path",
+                progress: rd.overallProgress || 0,
+                estimatedCompletion: rd.estimatedCompletion || "N/A",
+                completedModules: completed,
+                totalModules: total,
+                learningHours: hours
+            });
+
+            const mappedModules = (rd.skills || []).map(s => {
+                let statusStr = 'upcoming';
+                if (s.status === 'Completed' || s.status === 'Verified') statusStr = 'done';
+                else if (s.status === 'Learning' || s.status === 'InProgress') statusStr = 'learning';
+                
+                return {
+                    id: s.roadmapStepId,
+                    title: s.skillName,
+                    status: statusStr,
+                    desc: "Learn the core concepts and advanced techniques of " + s.skillName + " to build a strong foundation.",
+                    expectedDuration: s.estimatedDays + " Days",
+                    diff: "Intermediate",
+                    hours: s.estimatedDays * 2,
+                    icon: "📘",
+                    obj: "Master the fundamentals of " + s.skillName,
+                    topics: s.topics && s.topics.length > 0 ? s.topics : ["No topics available"],
+                    resources: [
+                        { i: "📹", n: "Video Crash Course", s: "Youtube", link: "https://learn.microsoft.com/en-us/dotnet/" },
+                        { i: "📖", n: "Official Docs", s: "Reading", link: "https://learn.microsoft.com/en-us/dotnet/csharp/" },
+                        { i: "💻", n: "Practice Lab", s: "Interactive", link: "#" }
+                    ],
+                    project: {
+                        icon: "🚀", title: "Build a " + s.skillName + " App", skills: s.skillName, time: "4 Hours", diff: "Intermediate"
+                    }
+                };
+            });
+
+            setModules(mappedModules);
+            if (mappedModules.length > 0) {
+                setActiveId(mappedModules[0].id);
             }
         }
     } catch (err) {
@@ -123,11 +178,7 @@ export default function CareerRoadmap() {
   
   let sm = null;
   if (activeModule) {
-      let statusKey = "locked";
-      if (activeModule.status === "Completed") statusKey = "done";
-      if (activeModule.status === "In Progress") statusKey = "learning";
-      if (activeModule.status === "Pending") statusKey = "upcoming";
-      sm = statusMap[statusKey];
+      sm = statusMap[activeModule.status] || statusMap["locked"];
   }
 
 
@@ -144,12 +195,12 @@ export default function CareerRoadmap() {
       if(ring){
         const c = 163.4;
         ring.style.transition = 'stroke-dashoffset 1.3s ease';
-        ring.style.strokeDashoffset = c - (0.68 * c);
+        ring.style.strokeDashoffset = c - ((roadmapMeta.progress / 100) * c);
       }
     }, 300);
 
     return () => { clearTimeout(timer1); clearTimeout(timer2); }
-  }, []);
+  }, [roadmapMeta.progress]);
 
   return (
     <div className="roadmap-wrapper shell-wrapper">
@@ -167,22 +218,20 @@ export default function CareerRoadmap() {
             <span>CareerBridge<span className="sub">Your Bridge to Success</span></span>
           </div>
           <nav className="sb-nav">
-            <a href="#" className="sb-link"><span className="ic">📊</span>Dashboard</a>
-            <a href="#" className="sb-link"><span className="ic">📝</span>Career Assessment</a>
-            <a href="#" className="sb-link"><span className="ic">🎯</span>Career Recommendation</a>
-            <a href="#" className="sb-link active"><span className="ic">🗺️</span>Learning Roadmap</a>
-            <a href="#" className="sb-link"><span className="ic">⚡</span>Skills</a>
-            <a href="#" className="sb-link"><span className="ic">💼</span>Projects<span className="cs">Soon</span></a>
-            <a href="#" className="sb-link"><span className="ic">✅</span>Assessments<span className="cs">Soon</span></a>
-            <a href="#" className="sb-link"><span className="ic">📄</span>Resume Builder<span className="cs">Soon</span></a>
-            <a href="#" className="sb-link"><span className="ic">👨‍💼</span>Mentor Connect<span className="cs">Soon</span></a>
-            <a href="#" className="sb-link"><span className="ic">🚀</span>Opportunities<span className="cs">Soon</span></a>
-            <a href="#" className="sb-link"><span className="ic">👤</span>Profile</a>
-            <a href="#" className="sb-link"><span className="ic">⚙️</span>Settings</a>
+            <a href="#" className="sb-link" onClick={(e) => { e.preventDefault(); navigate('/student-dashboard'); }}><span className="ic">📊</span>Dashboard</a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">📝</span>Assessment<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => { e.preventDefault(); navigate('/recommendation'); }}><span className="ic">🎯</span>Recommendation</a>
+            <a href="#" className="sb-link active" onClick={(e) => { e.preventDefault(); navigate('/roadmap'); }}><span className="ic">🗺️</span>Roadmap</a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">📈</span>Skill Progress<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">💼</span>Projects<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">✅</span>Mock Tests<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">📄</span>Resume Gap<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">🏆</span>Placement Readiness<span className="sb-badge">Coming Soon</span></a>
+            <a href="#" className="sb-link" onClick={(e) => e.preventDefault()}><span className="ic">🚀</span>Opportunities<span className="sb-badge">Coming Soon</span></a>
           </nav>
           <div className="sb-promo">
             <div className="pi">🏆</div>
-            <h5>Keep going, Akash! 🚀</h5>
+            <h5>Keep going, {userName.split(' ')[0]}! 🚀</h5>
             <p>You're doing great. Stay consistent and achieve your goals.</p>
             <a href="#" className="sb-btn">View Achievements</a>
           </div>
@@ -200,9 +249,10 @@ export default function CareerRoadmap() {
               <div className="streak-chip">🔥 <span>7</span><span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--ink-soft)' }}>Day Streak</span></div>
               <button className="icon-btn">🔔<span className="badge">3</span></button>
               <button className="icon-btn">🌙</button>
+              <button className="btn btn-sm" style={{borderColor: 'var(--danger)', color: 'var(--danger)', background: 'transparent', marginLeft: '12px', marginRight: '12px'}} onClick={() => { logout(); navigate('/login'); }}>Logout</button>
               <div className="user-chip">
-                <div className="uav">AK</div>
-                <div className="umeta"><div className="name">Hi, Akash 👋</div><div className="role">Student</div></div>
+                <div className="uav">{getInitials(userName)}</div>
+                <div className="umeta"><div className="name">Hi, {userName} 👋</div><div className="role">{userRole}</div></div>
               </div>
             </div>
           </header>
@@ -214,18 +264,18 @@ export default function CareerRoadmap() {
               <p>Your personalized learning journey based on your selected career path.</p>
               <div className="hs-career">
                 <div className="cc-ic">🔷</div>
-                <div><div className="cc-lbl">Career Path</div><div className="cc-val">.NET Full Stack Developer</div></div>
+                <div><div className="cc-lbl">Career Path</div><div className="cc-val">{roadmapMeta.careerTitle}</div></div>
               </div>
             </div>
             <div className="hs-stat">
               <div className="lbl">Roadmap Progress</div>
-              <div className="val">42%</div>
-              <div className="rail"><div className="fill" style={{ width: '0%' }} data-target="42%"></div></div>
+              <div className="val">{roadmapMeta.progress}%</div>
+              <div className="rail"><div className="fill" style={{ width: '0%' }} data-target={`${roadmapMeta.progress}%`}></div></div>
             </div>
             <div className="hs-stat">
               <div className="lbl">Estimated Completion</div>
-              <div className="val" style={{ fontSize: '18px' }}>5 Months</div>
-              <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--ink-soft)' }}>📅 8 completed · 12 remaining</div>
+              <div className="val" style={{ fontSize: '18px' }}>{roadmapMeta.estimatedCompletion}</div>
+              <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--ink-soft)' }}>📅 {roadmapMeta.completedModules} completed · {roadmapMeta.totalModules - roadmapMeta.completedModules} remaining</div>
             </div>
             <div className="hs-ring-card">
               <div className="hs-ring">
@@ -240,7 +290,7 @@ export default function CareerRoadmap() {
                   <circle className="hr-track" cx="31" cy="31" r="26"/>
                   <circle className="hr-fill" id="heroRing" cx="31" cy="31" r="26" strokeDasharray="163.4" strokeDashoffset="163.4"/>
                 </svg>
-                <div className="hs-ring-text"><span className="pct">68%</span><span className="lbl2">Placement</span></div>
+                <div className="hs-ring-text"><span className="pct">{roadmapMeta.progress}%</span><span className="lbl2">Placement</span></div>
               </div>
               <div className="hs-ring-info"><div className="rl">Placement Progress</div><div className="rv">Looking good!</div></div>
             </div>
@@ -339,11 +389,19 @@ export default function CareerRoadmap() {
                     <div className="dc-section-label">Learning Resources</div>
                     <div className="resources-grid">
                       {(activeModule.resources || []).map((r, i) => (
-                        <div key={i} className="res-card">
-                          <div className="ri">{r.i}</div>
-                          <div className="rn">{r.n}</div>
-                          <div className="rs">{r.s}</div>
-                        </div>
+                        r.link ? (
+                          <a key={i} href={r.link} target="_blank" rel="noreferrer" className="res-card" style={{textDecoration: 'none', color: 'inherit'}}>
+                            <div className="ri">{r.i}</div>
+                            <div className="rn">{r.n}</div>
+                            <div className="rs">{r.s}</div>
+                          </a>
+                        ) : (
+                          <div key={i} className="res-card">
+                            <div className="ri">{r.i}</div>
+                            <div className="rn">{r.n}</div>
+                            <div className="rs">{r.s}</div>
+                          </div>
+                        )
                       ))}
                     </div>
                   </div>
@@ -401,14 +459,14 @@ export default function CareerRoadmap() {
               <div className="sc-card">
                 <h4>Roadmap Statistics</h4>
                 <div className="stats-grid">
-                  <div className="stat-chip"><div className="si">📚</div><div className="sv">8</div><div className="sl">Completed Modules</div></div>
-                  <div className="stat-chip"><div className="si">⏰</div><div className="sv">32</div><div className="sl">Learning Hours</div></div>
-                  <div className="stat-chip"><div className="si">⚡</div><div className="sv">8</div><div className="sl">Skills Learned</div></div>
+                  <div className="stat-chip"><div className="si">📚</div><div className="sv">{roadmapMeta.completedModules}</div><div className="sl">Completed Modules</div></div>
+                  <div className="stat-chip"><div className="si">⏰</div><div className="sv">{roadmapMeta.learningHours}</div><div className="sl">Learning Hours</div></div>
+                  <div className="stat-chip"><div className="si">⚡</div><div className="sv">{roadmapMeta.completedModules}</div><div className="sl">Skills Learned</div></div>
                   <div className="stat-chip"><div className="si">🔥</div><div className="sv">7</div><div className="sl">Day Streak</div></div>
                 </div>
                 <div style={{ marginTop: '14px' }}>
-                  <div className="prog-row"><span>Overall Progress</span><span>42%</span></div>
-                  <div className="prog-rail"><div className="prog-fill" style={{ width: '0%' }} data-target="42%"></div></div>
+                  <div className="prog-row"><span>Overall Progress</span><span>{roadmapMeta.progress}%</span></div>
+                  <div className="prog-rail"><div className="prog-fill" style={{ width: '0%' }} data-target={`${roadmapMeta.progress}%`}></div></div>
                   <p style={{ fontSize: '10.5px', marginTop: '6px' }}>Keep going! You're making great progress.</p>
                 </div>
               </div>

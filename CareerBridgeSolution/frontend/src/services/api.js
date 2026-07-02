@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Automatically routes to your running .NET 8 Web API
 const apiClient = axios.create({
-  baseURL: 'https://localhost:7198/api', // ← Replace with your actual backend HTTPS port
+  baseURL: 'http://localhost:5097/api', // Pointing to the 'http' profile port
   headers: {
     'Content-Type': 'application/json',
   },

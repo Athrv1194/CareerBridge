@@ -28,9 +28,18 @@ const AppNavbar = () => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-          {isAuthenticated && (
-            <Button variant="outline-danger" onClick={handleLogout} className="fw-semibold px-4 rounded-pill">
-              Logout
+          {isAuthenticated ? (
+            <div className="d-flex align-items-center">
+              <span className="me-3 fw-medium" style={{ color: 'var(--ink)' }}>
+                Hello, {user?.fullName || user?.email || 'User'}
+              </span>
+              <Button variant="outline-danger" onClick={handleLogout} className="fw-semibold px-4 rounded-pill">
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Button variant="primary" onClick={() => navigate('/login')} className="fw-semibold px-4 rounded-pill">
+              Login
             </Button>
           )}
         </Navbar.Collapse>

@@ -19,7 +19,7 @@ namespace CareerBridge.API.Extensions
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowReact", builder =>
-                    builder.WithOrigins("http://localhost:5173")
+                    builder.SetIsOriginAllowed(origin => true)
                            .AllowAnyMethod()
                            .AllowAnyHeader()
                            .AllowCredentials());
@@ -47,6 +47,10 @@ namespace CareerBridge.API.Extensions
             // Roadmap Module DI
             services.AddScoped<CareerBridge.API.Repositories.Roadmap.IRoadmapRepository, CareerBridge.API.Repositories.Roadmap.RoadmapRepository>();
             services.AddScoped<CareerBridge.API.Services.Roadmap.IRoadmapService, CareerBridge.API.Services.Roadmap.RoadmapService>();
+            
+            // Dashboard Module DI
+            services.AddScoped<CareerBridge.API.Repositories.Dashboard.IDashboardRepository, CareerBridge.API.Repositories.Dashboard.DashboardRepository>();
+            services.AddScoped<CareerBridge.API.Services.Dashboard.IDashboardService, CareerBridge.API.Services.Dashboard.DashboardService>();
         }
     }
 }

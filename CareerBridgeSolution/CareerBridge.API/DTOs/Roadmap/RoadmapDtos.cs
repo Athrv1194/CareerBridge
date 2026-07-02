@@ -20,6 +20,7 @@ namespace CareerBridge.API.DTOs.Roadmap
         public string Status { get; set; } = string.Empty;
         public int EstimatedDays { get; set; }
         public int Order { get; set; }
+        public List<string> Topics { get; set; } = new List<string>();
     }
 
     public class CurrentLearningDto

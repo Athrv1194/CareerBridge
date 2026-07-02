@@ -12,6 +12,7 @@ namespace CareerBridge.API.Models
         public string Description { get; set; } = string.Empty;
         public int LearningOrder { get; set; }
         public int EstimatedHours { get; set; }
+        public string TopicsJson { get; set; } = "[]";
 
         public CareerPath? CareerPath { get; set; }
         public ICollection<UserRoadmapProgress> UserProgresses { get; set; } = new List<UserRoadmapProgress>();

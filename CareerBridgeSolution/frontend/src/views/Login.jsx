@@ -30,8 +30,38 @@ const Login = () => {
     
     try {
       const response = await loginUser(formData);
-      login(response.data.token, response.data.user);
-      navigate('/onboarding');
+      login(response.data.data.token, response.data.data.user);
+      
+      try {
+        const { getRecommendation, getProfile } = await import('../services/dataService');
+        
+        // 1. Check if user already has a career recommendation
+        try {
+          const recRes = await getRecommendation();
+          if (recRes.data?.data?.careerId) {
+            navigate('/recommendation');
+            return;
+          }
+        } catch (e) {
+          // Intentionally swallow - means no recommendation yet
+        }
+
+        // 2. Check if user already completed their profile
+        try {
+          const profRes = await getProfile();
+          if (profRes.data?.data?.profileCompletionPercentage >= 80) {
+            navigate('/assessment');
+            return;
+          }
+        } catch (e) {
+          // Intentionally swallow
+        }
+
+        // 3. Fallback to onboarding
+        navigate('/onboarding');
+      } catch (e) {
+        navigate('/onboarding');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {

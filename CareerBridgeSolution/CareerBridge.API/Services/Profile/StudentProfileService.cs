@@ -82,12 +82,13 @@ namespace CareerBridge.API.Services.Profile
             var profile = await _repository.GetByUserIdAsync(userId);
             if (profile == null)
             {
-                return new ApiResponse<StudentProfileResponseDto>
+                // Upsert: Create it if it doesn't exist
+                profile = new StudentProfile
                 {
-                    Success = false,
-                    Message = "Student Profile not found",
-                    StatusCode = 404
+                    UserId = userId,
+                    CreatedAt = DateTime.UtcNow
                 };
+                await _repository.CreateAsync(profile);
             }
 
             profile.CollegeName = request.CollegeName;

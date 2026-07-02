@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './StudentDashboard.css';
 import { getDashboardSummary } from '../services/dataService';
+import { useAuth } from '../context/AuthContext';
 
 const StudentDashboard = () => {
+    const navigate = useNavigate();
+    const { user, logout } = useAuth();
+    const userName = user?.fullName || "User";
+    const userRole = user?.role || "Student";
+    
+    const getInitials = (name) => {
+        if (!name) return "U";
+        return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    };
+
     const [summary, setSummary] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -24,17 +36,18 @@ const StudentDashboard = () => {
             setError(err.response?.data?.message || 'Failed to load dashboard data.');
             // Fallback for mock data if backend not reachable or empty
             setSummary({
-                user: { fullName: "Akash" },
-                recommendedPath: { title: "{summary?.recommendedPath?.title || 'Career Path'}", expectedSalary: "$100,000" },
-                placementReadinessScore: 78,
-                completedSteps: 3,
-                totalSteps: 10,
-                activeRoadmap: {
+                user: { fullName: user?.fullName || "Student" },
+                career: { careerTitle: "Software Engineer" },
+                placementReadiness: { overallScore: 78 },
+                roadmap: {
+                    completedSkills: 3,
+                    totalSkills: 10,
+                    overallProgress: 30,
                     steps: [
                         { title: "Programming Fundamentals", status: "Completed" },
                         { title: "C# Programming", status: "Completed" },
-                        { title: "Object-Oriented Programming", status: "In Progress" },
-                        { title: "Collections & LINQ", status: "Locked" },
+                        { title: "Object-Oriented Programming", status: "Learning" },
+                        { title: "Collections & LINQ", status: "Locked" }
                     ]
                 }
             });
@@ -61,18 +74,17 @@ const StudentDashboard = () => {
     </div>
 
     <nav className="sb-nav">
-      <a className="sb-link active" href="#"><span className="ic">🏠</span>Dashboard</a>
-      <a className="sb-link" href="#"><span className="ic">📋</span>Career Assessment</a>
-      <a className="sb-link" href="#"><span className="ic">🎯</span>Career Recommendation</a>
-      <a className="sb-link" href="#"><span className="ic">🛣️</span>Learning Roadmap</a>
-      <a className="sb-link" href="#"><span className="ic">🧠</span>Skills</a>
-      <a className="sb-link" href="#"><span className="ic">💼</span>Projects<span className="sb-badge">Coming Soon</span></a>
-      <a className="sb-link" href="#"><span className="ic">📝</span>Assessments<span className="sb-badge">Coming Soon</span></a>
-      <a className="sb-link" href="#"><span className="ic">📄</span>Resume Builder<span className="sb-badge">Coming Soon</span></a>
-      <a className="sb-link" href="#"><span className="ic">🎯</span>Opportunities<span className="sb-badge">Coming Soon</span></a>
-      <a className="sb-link" href="#"><span className="ic">👨‍🏫</span>Mentor Connect<span className="sb-badge">Coming Soon</span></a>
-      <a className="sb-link" href="#"><span className="ic">👤</span>Profile</a>
-      <a className="sb-link" href="#"><span className="ic">⚙️</span>Settings</a>
+      <a className="sb-link active" href="#" onClick={(e) => { e.preventDefault(); navigate('/student-dashboard'); }}><span className="ic">🏠</span>Dashboard</a>
+      <a className="sb-link" href="#" onClick={(e) => e.preventDefault()}><span className="ic">📋</span>Assessment<span className="sb-badge">Coming Soon</span></a>
+      <a className="sb-link" href="#" onClick={(e) => { e.preventDefault(); navigate('/recommendation'); }}><span className="ic">🎯</span>Recommendation</a>
+      <a className="sb-link" href="#" onClick={(e) => { e.preventDefault(); navigate('/roadmap'); }}><span className="ic">🛣️</span>Roadmap</a>
+      <a className="sb-link" href="#" onClick={(e) => e.preventDefault()}><span className="ic">📈</span>Skill Progress<span className="sb-badge">Coming Soon</span></a>
+      <a className="sb-link" href="#" onClick={(e) => e.preventDefault()}><span className="ic">💼</span>Projects<span className="sb-badge">Coming Soon</span></a>
+      <a className="sb-link" href="#" onClick={(e) => e.preventDefault()}><span className="ic">📝</span>Mock Tests<span className="sb-badge">Coming Soon</span></a>
+      <a className="sb-link" href="#" onClick={(e) => e.preventDefault()}><span className="ic">📄</span>Resume Gap<span className="sb-badge">Coming Soon</span></a>
+      <a className="sb-link" href="#" onClick={(e) => e.preventDefault()}><span className="ic">🏆</span>Placement Readiness<span className="sb-badge">Coming Soon</span></a>
+      <a className="sb-link" href="#" onClick={(e) => e.preventDefault()}><span className="ic">🎯</span>Opportunities<span className="sb-badge">Coming Soon</span></a>
+      <a className="sb-link" href="#" onClick={(e) => e.preventDefault()}><span className="ic">👨‍🏫</span>Mentor Connect<span className="sb-badge">Coming Soon</span></a>
     </nav>
 
     <div className="sb-promo">
@@ -103,11 +115,12 @@ const StudentDashboard = () => {
       <div className="topbar-right">
         <button className="icon-btn" id="themeToggle">🌙</button>
         <button className="icon-btn">🔔<span className="badge">3</span></button>
+        <button className="btn btn-sm" style={{borderColor: 'var(--danger)', color: 'var(--danger)', background: 'transparent', marginLeft: '12px', marginRight: '12px'}} onClick={() => { logout(); navigate('/login'); }}>Logout</button>
         <div className="profile-chip">
-          <div className="avatar">AK</div>
+          <div className="avatar">{getInitials(userName)}</div>
           <div>
-            <div className="pname">Hi, {summary?.user?.fullName || 'Student'} 👋</div>
-            <div className="prole">Student</div>
+            <div className="pname">Hi, {userName} 👋</div>
+            <div className="prole">{userRole}</div>
           </div>
           <span className="chev">▾</span>
         </div>
@@ -119,8 +132,8 @@ const StudentDashboard = () => {
       {/* HERO */}
       <div className="hero-card fade-in">
         <div className="hero-text">
-          <h1>Welcome back, {summary?.user?.fullName || 'Student'} 👋</h1>
-          <p>Keep learning, keep growing. You're one step closer to your dream career — continue your journey toward becoming a <strong style={{ color: '#fff' }}>{summary?.recommendedPath?.title || 'Career Path'}</strong>.</p>
+          <h1>Welcome back, {userName} 👋</h1>
+          <p>Keep learning, keep growing. You're one step closer to your dream career — continue your journey toward becoming a <strong style={{ color: '#fff' }}>{summary?.career?.careerTitle || 'Software Engineer'}</strong>.</p>
         </div>
         <div className="hero-visual">
           <svg viewBox="0 0 240 140">
@@ -154,7 +167,7 @@ const StudentDashboard = () => {
             <div className="glass-card stat-card fade-in">
               <div className="stat-title">Recommended Career</div>
               <span className="pill pill-success">🏆 Best Match</span>
-              <div className="big">{summary?.recommendedPath?.title || 'Career Path'}</div>
+              <div className="big">{summary?.career?.careerTitle || 'Software Engineer'}</div>
               <div className="sub">High Demand · Great Salary · Future Proof</div>
               <button className="btn btn-primary">View Career Details</button>
             </div>
@@ -167,7 +180,7 @@ const StudentDashboard = () => {
                   <circle className="ring-fg" cx="40" cy="40" r="33" stroke="url(#gradBlue)" strokeDasharray="68 207"/>
                   <defs><linearGradient id="gradBlue" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#2563EB"/><stop offset="100%" stopColor="#06B6D4"/></linearGradient></defs>
                 </svg>
-                <div className="ring-pct"><span className="n">{summary?.totalSteps > 0 ? Math.round((summary.completedSteps / summary.totalSteps) * 100) : 0}%</span><span className="l">Completed</span></div>
+                <div className="ring-pct"><span className="n">{summary?.roadmap?.totalSkills > 0 ? Math.round((summary.roadmap.completedSkills / summary.roadmap.totalSkills) * 100) : 0}%</span><span className="l">Completed</span></div>
               </div>
               <button className="btn btn-soft">View Roadmap</button>
             </div>
@@ -205,10 +218,10 @@ const StudentDashboard = () => {
               <a className="link-sm" href="#">View Full Roadmap →</a>
             </div>
             <div className="timeline">
-              {summary?.activeRoadmap?.steps?.map((step, index) => {
-                  const isDone = step.status === 'Completed';
-                  const isActive = step.status === 'In Progress';
-                  const isLocked = step.status === 'Locked' || step.status === 'Pending';
+              {summary?.roadmap?.steps?.map((step, index) => {
+                  const isDone = step.status === 'Completed' || step.status === 'Verified';
+                  const isActive = step.status === 'Learning' || step.status === 'Practicing';
+                  const isLocked = step.status === 'NotStarted' || step.status === 'Locked';
                   
                   let markerClass = 'tl-marker locked';
                   if (isDone) markerClass = 'tl-marker done';
@@ -225,14 +238,14 @@ const StudentDashboard = () => {
                       <div className="tl-row" key={index}>
                         <div className="tl-marker-wrap">
                             <div className={markerClass}>{isDone ? '✓' : (index + 1)}</div>
-                            {index < (summary?.activeRoadmap?.steps?.length || 0) - 1 && <div className={`tl-line ${isDone ? 'done' : ''}`}></div>}
+                            {index < (summary?.roadmap?.steps?.length || 0) - 1 && <div className={`tl-line ${isDone ? 'done' : ''}`}></div>}
                         </div>
                         <div className={contentClass}>
                             <div>
                                 <div className="tl-name">{step.title}</div>
                                 <div className="tl-desc">{step.description || 'Module details'}</div>
                             </div>
-                            <span className={statusClass}>{step.status}</span>
+                            <span className={statusClass}>{step.status === 'NotStarted' ? 'Locked' : step.status}</span>
                         </div>
                       </div>
                   );
@@ -245,22 +258,36 @@ const StudentDashboard = () => {
             <div className="section-card fade-in">
               <div className="section-head"><h3>Recent Activity</h3><a className="link-sm" href="#">View All →</a></div>
               <div className="activity-list">
-                <div className="activity-row"><div className="act-ic" style={{ background: 'var(--success)' }}>✓</div><div className="act-name">Profile Completed</div><div className="act-time">2 days ago</div></div>
-                <div className="activity-row"><div className="act-ic" style={{ background: 'var(--primary)' }}>📋</div><div className="act-name">Assessment Submitted</div><div className="act-time">2 days ago</div></div>
-                <div className="activity-row"><div className="act-ic" style={{ background: 'var(--secondary)' }}>🎯</div><div className="act-name">Career Recommended</div><div className="act-time">2 days ago</div></div>
-                <div className="activity-row"><div className="act-ic" style={{ background: 'var(--warning)' }}>🛣️</div><div className="act-name">Roadmap Generated</div><div className="act-time">2 days ago</div></div>
-                <div className="activity-row"><div className="act-ic" style={{ background: 'var(--accent)' }}>📘</div><div className="act-name">Started Learning C#</div><div className="act-time">1 day ago</div></div>
+                  {(summary?.recentActivity || []).map((act, index) => {
+                      let icon = '✓';
+                      let color = 'var(--success)';
+                      if (act.title.includes('Assessment')) { icon = '📋'; color = 'var(--primary)'; }
+                      else if (act.title.includes('Recommended') || act.title.includes('Recommendation')) { icon = '🎯'; color = 'var(--secondary)'; }
+                      else if (act.title.includes('Roadmap')) { icon = '🛣️'; color = 'var(--warning)'; }
+                      else if (act.title.includes('Started') || act.title.includes('Learning') || act.title.includes('Skill')) { icon = '📖'; color = 'var(--accent)'; }
+                      
+                      return (
+                          <div className="activity-row" key={index}>
+                              <div className="act-ic" style={{ background: color }}>{icon}</div>
+                              <div className="act-name">{act.title}</div>
+                              <div className="act-time">{act.date}</div>
+                          </div>
+                      );
+                  })}
+                  {(!summary?.recentActivity || summary.recentActivity.length === 0) && (
+                      <div className="activity-row"><div className="act-name">No recent activity</div></div>
+                  )}
               </div>
             </div>
 
             <div className="section-card fade-in">
               <div className="section-head"><h3>Career Summary</h3></div>
               <div className="summary-list">
-                <div className="summary-row"><span className="k"><span className="ic">💼</span>Career</span><span className="v">{summary?.recommendedPath?.title || 'Career Path'}</span></div>
+                <div className="summary-row"><span className="k"><span className="ic">💼</span>Career</span><span className="v">{summary?.career?.careerTitle || 'Software Engineer'}</span></div>
                 <div className="summary-row"><span className="k"><span className="ic">📈</span>Current Stage</span><span className="v">Intermediate</span></div>
-                <div className="summary-row"><span className="k"><span className="ic">✅</span>Completed Skills</span><span className="v">{summary?.completedSteps || 0}</span></div>
-                <div className="summary-row"><span className="k"><span className="ic">⏳</span>Remaining Skills</span><span className="v">{summary?.totalSteps ? summary.totalSteps - summary.completedSteps : 0}</span></div>
-                <div className="summary-row"><span className="k"><span className="ic">📅</span>Est. Completion</span><span className="v">7 Months</span></div>
+                <div className="summary-row"><span className="k"><span className="ic">✅</span>Completed Skills</span><span className="v">{summary?.roadmap?.completedSkills || 0}</span></div>
+                <div className="summary-row"><span className="k"><span className="ic">⏳</span>Remaining Skills</span><span className="v">{summary?.roadmap?.totalSkills ? summary.roadmap.totalSkills - summary.roadmap.completedSkills : 0}</span></div>
+                <div className="summary-row"><span className="k"><span className="ic">📅</span>Est. Completion</span><span className="v">{summary?.roadmap?.estimatedCompletion || '7 Months'}</span></div>
               </div>
               <button className="btn btn-outline">View Details</button>
             </div>
@@ -277,15 +304,15 @@ const StudentDashboard = () => {
             <div className="nextup-top">
               <div className="nextup-icon">📦</div>
               <div>
-                <div style={{ fontSize: '14.5px', fontWeight: '700' }}>LINQ</div>
-                <div style={{ fontSize: '12px', color: 'var(--ink-faint)' }}>Language Integrated Query</div>
+                <div style={{ fontSize: '14.5px', fontWeight: '700' }}>{summary?.roadmap?.currentSkill || 'Skill'}</div>
+                <div style={{ fontSize: '12px', color: 'var(--ink-faint)' }}>Keep progressing</div>
               </div>
             </div>
             <div className="nextup-meta-grid">
               <div><div className="l">Estimated Time</div><div className="v">⏱️ 5 Hours</div></div>
               <div><div className="l">Difficulty</div><div className="v">📶 Intermediate</div></div>
             </div>
-            <button className="btn btn-primary">Start Learning →</button>
+            <button className="btn btn-primary" onClick={() => navigate('/roadmap')}>Continue Learning →</button>
           </div>
 
           {/* PLACEMENT READINESS */}
@@ -297,7 +324,7 @@ const StudentDashboard = () => {
                 <circle cx="55" cy="55" r="46" fill="none" stroke="url(#gaugeGrad)" strokeWidth="9" strokeLinecap="round" strokeDasharray="226 289"/>
                 <defs><linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#22C55E"/><stop offset="55%" stopColor="#F59E0B"/><stop offset="100%" stopColor="#7C3AED"/></linearGradient></defs>
               </svg>
-              <div className="ring-pct" style={{ inset: '0' }}><span className="n" style={{ fontSize: '22px' }}>{summary?.placementReadinessScore || 0}%</span><span className="l">Your Score</span></div>
+              <div className="ring-pct" style={{ inset: '0' }}><span className="n" style={{ fontSize: '22px' }}>{summary?.placementReadiness?.overallScore || 0}%</span><span className="l">Your Score</span></div>
             </div>
             <div style={{ fontSize: '13px', fontWeight: '700' }}>You're doing great! 🎉</div>
             <p style={{ fontSize: '12px' }}>Keep learning and building projects to improve your score.</p>

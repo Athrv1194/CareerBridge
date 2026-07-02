@@ -12,5 +12,6 @@ namespace CareerBridge.API.Repositories.Recommendation
         Task<Models.Roadmap?> GetRoadmapByUserIdAsync(int userId);
         Task<PlacementReadiness?> GetPlacementReadinessAsync(int userId);
         Task SaveRecommendationTransactionAsync(CareerRecommendation recommendation);
+        Task<List<CareerPath>> GetAllCareerPathsAsync();
     }
 }

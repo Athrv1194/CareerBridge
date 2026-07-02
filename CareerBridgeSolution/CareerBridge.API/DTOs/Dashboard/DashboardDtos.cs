@@ -52,6 +52,14 @@ namespace CareerBridge.API.DTOs.Dashboard
         public int NotStartedSkills { get; set; }
         public int VerifiedSkills { get; set; }
         public string EstimatedCompletion { get; set; } = string.Empty;
+        public List<RoadmapStepPreviewDto> Steps { get; set; } = new List<RoadmapStepPreviewDto>();
+    }
+
+    public class RoadmapStepPreviewDto
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
     }
 
     public class PlacementSummaryDto

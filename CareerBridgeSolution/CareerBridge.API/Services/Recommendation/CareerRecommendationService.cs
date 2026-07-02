@@ -125,21 +125,74 @@ namespace CareerBridge.API.Services.Recommendation
 
             var assessment = await _repository.GetLatestAssessmentAsync(userId);
             
-            // Extract Strengths from assessment options
+            // Extract Strengths and Category Scores from assessment options
             var strengths = new List<string>();
+            var categoryScores = new List<CategoryScoreDto>();
+
             if (assessment != null && assessment.Answers != null)
             {
-                var uniqueStrengths = assessment.Answers
-                    .Select(a => a.Option?.OptionText ?? "General Aptitude")
+                var answersWithOption = assessment.Answers.Where(a => a.Option != null && a.Option.Question != null).ToList();
+                
+                var uniqueStrengths = answersWithOption
+                    .Select(a => a.Option.OptionText)
+                    .Distinct()
                     .Take(4)
                     .ToList();
                 strengths.AddRange(uniqueStrengths);
+
+                var groupedByCategory = answersWithOption.GroupBy(a => a.Option.Question.Category);
+                foreach (var group in groupedByCategory)
+                {
+                    int avgWeight = (int)group.Average(a => a.Option.Weight);
+                    int scorePct = Math.Min(98, 70 + (avgWeight * 5)); 
+                    
+                    categoryScores.Add(new CategoryScoreDto
+                    {
+                        Label = string.IsNullOrWhiteSpace(group.Key) ? "General Aptitude" : group.Key,
+                        Percentage = scorePct
+                    });
+                }
             }
+            
             if (!strengths.Any())
             {
                 strengths.Add("Logical thinking");
                 strengths.Add("Problem solving ability");
             }
+
+            if (!categoryScores.Any())
+            {
+                categoryScores.Add(new CategoryScoreDto { Label = "Programming Logic", Percentage = 85 });
+                categoryScores.Add(new CategoryScoreDto { Label = "Technical Aptitude", Percentage = 90 });
+            }
+
+            var allPaths = await _repository.GetAllCareerPathsAsync();
+            var alternatives = allPaths
+                .Where(p => p.Id != recommendation.CareerPathId)
+                .Take(3)
+                .Select((p, index) => new AlternativeCareerDto
+                {
+                    CareerId = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    IndustryDemand = p.IndustryDemand,
+                    AverageSalary = $"₹{p.AverageSalary} LPA",
+                    EstimatedDuration = $"{p.DurationMonths} Months",
+                    MatchPercentage = Math.Max(50, (int)recommendation.MatchPercentage - (10 * (index + 1)))
+                }).ToList();
+
+            var roadmapSteps = careerPath.RoadmapSteps != null 
+                ? careerPath.RoadmapSteps
+                    .OrderBy(s => s.LearningOrder)
+                    .Take(4)
+                    .Select(s => new RoadmapStepDto
+                    {
+                        StepNumber = s.LearningOrder,
+                        Duration = s.EstimatedHours > 0 ? $"Week {s.LearningOrder}-{s.LearningOrder + (s.EstimatedHours / 20)}" : $"Week {s.LearningOrder}",
+                        Title = s.Title,
+                        Subtitle = s.Description.Length > 40 ? s.Description.Substring(0, 37) + "..." : s.Description
+                    }).ToList()
+                : new List<RoadmapStepDto>();
 
             var dto = new RecommendationResponseDto
             {
@@ -152,11 +205,14 @@ namespace CareerBridge.API.Services.Recommendation
                 MatchPercentage = (int)recommendation.MatchPercentage,
                 RecommendationReason = recommendation.RecommendationReason,
                 Strengths = strengths,
+                CategoryScores = categoryScores,
                 RecommendedSkills = careerPath.CareerPathSkills.Select(cs => cs.Skill?.Name ?? "").Where(n => !string.IsNullOrEmpty(n)).ToList(),
                 RoadmapId = roadmap?.Id ?? 0,
+                RoadmapSteps = roadmapSteps,
                 PlacementReadinessScore = placementReadiness?.OverallScore ?? 0,
                 CreatedAt = recommendation.GeneratedAt,
-                NextStep = "Roadmap"
+                NextStep = "Roadmap",
+                Alternatives = alternatives
             };
 
             return new ApiResponse<RecommendationResponseDto>

@@ -318,7 +318,7 @@ body {
 }
 .register-page-wrapper .career-card .cc-icon {font-size:19px; margin-bottom:5px;}
 .register-page-wrapper .career-card .cc-title {font-size:11.5px; font-weight:700; color:var(--ink); line-height:1.25;}
-.register-page-wrapper .career-card .cc-meta {font-size:9.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5;}
+.register-page-wrapper .career-card .cc-meta {font-size:9.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5; display:block;}
 
 /* autocomplete */
 .register-page-wrapper .autocomplete-list {

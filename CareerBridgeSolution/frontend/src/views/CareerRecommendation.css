@@ -65,10 +65,14 @@ h1,h2,h3,h4,h5,h6,.display{font-family:'Lexend',sans-serif; letter-spacing:-0.02
 .sb-link{
   display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:11px;
   font-size:13.5px; font-weight:600; color:var(--ink-soft); transition:background .2s, color .2s;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .sb-link .ic{width:18px; text-align:center; font-size:15px;}
 .sb-link:hover{background:rgba(37,99,235,0.06); color:var(--ink);}
 .sb-link.active{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; box-shadow:0 8px 20px -8px rgba(37,99,235,0.5);}
+
+.sb-badge{margin-left:auto; font-size:9.5px; font-weight:700; padding:3px 7px; border-radius:999px; background:rgba(245,158,11,0.14); color:var(--warning); white-space:nowrap;}
+.sb-link.active .sb-badge{background:rgba(255,255,255,0.22); color:#fff;}
 
 .sb-promo{
   margin-top:18px; padding:16px; border-radius:16px;
@@ -185,10 +189,10 @@ h1,h2,h3,h4,h5,h6,.display{font-family:'Lexend',sans-serif; letter-spacing:-0.02
 .cc-meta-row .k{color:var(--ink-soft);}
 .cc-meta-row .v{font-weight:700;}
 .cc-btns{display:flex; gap:8px; margin-top:14px;}
-.cc-btns button{flex:1; padding:8px; border-radius:9px; font-size:12px; font-weight:700;}
-.cc-btn-compare{border:1.5px solid var(--line); color:var(--ink);}
-.cc-btn-compare:hover{border-color:var(--primary); color:var(--primary);}
-.cc-btn-roadmap{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff;}
+.cc-btns button{flex:1; padding:8px; border-radius:9px; font-size:12px; font-weight:700; cursor:pointer;}
+.cc-btn-compare{border:1.5px solid var(--line, #e2e8f0); color:var(--ink, #0f172a); background:transparent;}
+.cc-btn-compare:hover{border-color:var(--primary, #2563EB); color:var(--primary, #2563EB);}
+.cc-btn-roadmap{background:linear-gradient(135deg,var(--primary, #2563EB),var(--secondary, #7C3AED)); color:#fff; border:none;}
 .cc-btn-roadmap:hover{transform:translateY(-1px);}
 
 /* ================= WHY THESE ================= */

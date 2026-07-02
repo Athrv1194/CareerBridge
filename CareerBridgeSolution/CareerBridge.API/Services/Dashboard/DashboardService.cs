@@ -98,6 +98,13 @@ namespace CareerBridge.API.Services.Dashboard
                 int remainingMonths = (int)Math.Ceiling(remainingHours / 40.0);
                 string estimatedCompletion = remainingMonths > 0 ? $"{remainingMonths} Months" : "Ready for Placement";
 
+                var stepPreviews = progressList.Take(5).Select(p => new RoadmapStepPreviewDto
+                {
+                    Title = p.RoadmapStep?.Title ?? "Unknown Step",
+                    Description = p.RoadmapStep?.Description ?? "",
+                    Status = p.Status.ToString()
+                }).ToList();
+
                 dashboardDto.Roadmap = new RoadmapSummaryDto
                 {
                     OverallProgress = overallProgress,
@@ -108,7 +115,8 @@ namespace CareerBridge.API.Services.Dashboard
                     PracticingSkills = progressList.Count(p => p.Status == RoadmapStatus.Practicing),
                     NotStartedSkills = progressList.Count(p => p.Status == RoadmapStatus.NotStarted),
                     VerifiedSkills = progressList.Count(p => p.Status == RoadmapStatus.Verified),
-                    EstimatedCompletion = estimatedCompletion
+                    EstimatedCompletion = estimatedCompletion,
+                    Steps = stepPreviews
                 };
             }
 

@@ -140,7 +140,8 @@ namespace CareerBridge.API.Services.Roadmap
                 SkillName = p.RoadmapStep?.Title ?? string.Empty,
                 Status = p.Status.ToString(),
                 EstimatedDays = (p.RoadmapStep?.EstimatedHours ?? 0) / 2, // Assume 2 hours a day
-                Order = p.RoadmapStep?.LearningOrder ?? 0
+                Order = p.RoadmapStep?.LearningOrder ?? 0,
+                Topics = string.IsNullOrEmpty(p.RoadmapStep?.TopicsJson) ? new List<string>() : System.Text.Json.JsonSerializer.Deserialize<List<string>>(p.RoadmapStep.TopicsJson) ?? new List<string>()
             }).ToList();
 
             var dto = new RoadmapResponseDto

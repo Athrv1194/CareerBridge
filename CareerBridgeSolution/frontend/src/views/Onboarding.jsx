@@ -28,7 +28,7 @@ const careers = [
 
 const Onboarding = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [skillSearch, setSkillSearch] = useState("");
   const [successFlow, setSuccessFlow] = useState(false);
@@ -98,15 +98,21 @@ const Onboarding = () => {
 
   const submitProfile = async () => {
     try {
+      let parsedYear = 1;
+      if (state.education.year === "2nd Year") parsedYear = 2;
+      else if (state.education.year === "3rd Year") parsedYear = 3;
+      else if (state.education.year === "Final Year") parsedYear = 4;
+      else if (state.education.year === "Graduated") parsedYear = 5;
+
       const payload = {
         CollegeName: state.education.college || "N/A",
         Degree: state.education.eduLevel || "B.Tech",
-        CGPA: 8.0,
-        GraduationYear: 2024,
-        PreferredLocation: state.basic.city || "Bangalore",
-        Skills: state.skills,
-        CareerInterests: state.careers,
-        IsCompleted: true
+        Branch: "Computer Science", // Not in form currently, required by backend
+        AcademicYear: parsedYear, 
+        CGPA: parseFloat(state.education.cgpa) || 0.0,
+        PreferredLocation: state.basic.prefLocation || state.basic.city || "Remote",
+        CareerInterest: state.careers?.length > 0 ? state.careers[0] : "Software Engineering", 
+        Bio: state.goals.primaryGoal ? `Primary Goal: ${state.goals.primaryGoal}` : "Eager to learn and grow." 
       };
       await updateProfile(payload);
       runSuccessFlow();
@@ -220,6 +226,7 @@ const Onboarding = () => {
 
           <div className="nav-right">
             <button className="icon-btn">🌙</button>
+            <button className="btn btn-sm" style={{borderColor: 'var(--danger)', color: 'var(--danger)', background: 'transparent', marginLeft: '12px'}} onClick={() => { logout(); navigate('/login'); }}>Logout</button>
             <button className="icon-btn">🔔</button>
             <button className="icon-btn">❓</button>
           </div>

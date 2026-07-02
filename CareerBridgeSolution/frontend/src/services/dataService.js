@@ -3,6 +3,7 @@ import apiClient from './api';
 export const getCareerPaths = () => apiClient.get('/paths');
 
 export const getRoadmap = () => apiClient.get('/Roadmap');
+export const startRoadmap = () => apiClient.post('/Roadmap/start');
 
 export const updateStepStatus = (payload) => apiClient.put('/Roadmap/status', payload);
 
@@ -10,7 +11,7 @@ export const registerUser = (payload) => apiClient.post('/Auth/register', payloa
 
 export const loginUser = (payload) => apiClient.post('/Auth/login', payload);
 
-export const getDashboardSummary = () => apiClient.get('/Dashboard/summary');
+export const getDashboardSummary = () => apiClient.get('/Dashboard');
 
 export const getProfile = () => apiClient.get('/Profile');
 export const updateProfile = (payload) => apiClient.put('/Profile', payload);

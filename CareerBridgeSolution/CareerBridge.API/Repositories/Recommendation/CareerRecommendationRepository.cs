@@ -69,5 +69,10 @@ namespace CareerBridge.API.Repositories.Recommendation
             }
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<CareerPath>> GetAllCareerPathsAsync()
+        {
+            return await _context.CareerPaths.ToListAsync();
+        }
     }
 }
